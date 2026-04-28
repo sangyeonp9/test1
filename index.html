@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Financial Dashboard | 금융 차트 대시보드</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Ticker Tape -->
+  <div id="ticker-wrap">
+    <div class="tradingview-widget-container">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+      {
+        "symbols": [
+          {"proName": "FOREXCOM:SPXUSD", "title": "S&P 500"},
+          {"proName": "FOREXCOM:NSXUSD", "title": "NASDAQ 100"},
+          {"description": "DOW Jones", "proName": "FOREXCOM:DJI"},
+          {"description": "KOSPI", "proName": "KRX:KOSPI"},
+          {"description": "NIKKEI 225", "proName": "TVC:NI225"},
+          {"description": "HANG SENG", "proName": "TVC:HSI"},
+          {"description": "Gold", "proName": "TVC:GOLD"},
+          {"description": "WTI Oil", "proName": "TVC:USOIL"},
+          {"description": "BTC/USD", "proName": "BITSTAMP:BTCUSD"},
+          {"description": "ETH/USD", "proName": "BITSTAMP:ETHUSD"},
+          {"description": "USD/KRW", "proName": "FX_IDC:USDKRW"}
+        ],
+        "showSymbolLogo": true,
+        "isTransparent": true,
+        "displayMode": "adaptive",
+        "colorTheme": "dark",
+        "locale": "kr"
+      }
+      </script>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header id="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">📈</span>
+        <span class="logo-text">Financial Dashboard</span>
+        <span class="logo-sub">실시간 금융 분석</span>
+      </div>
+      <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="indices">주요 지수</button>
+        <button class="tab-btn" data-tab="stocks">개별 종목</button>
+        <button class="tab-btn" data-tab="commodities">원자재/외환</button>
+        <button class="tab-btn" data-tab="crypto">암호화폐</button>
+      </nav>
+      <div class="market-status" id="market-status">
+        <span class="status-dot"></span>
+        <span class="status-text">Market</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+
+    <!-- Tab: 주요 지수 -->
+    <section class="tab-section active" id="tab-indices">
+
+      <!-- Main Chart -->
+      <div class="section-row">
+        <div class="main-chart-container card">
+          <div class="card-header">
+            <h2 class="card-title" id="main-chart-title">S&amp;P 500</h2>
+            <div class="symbol-buttons">
+              <button class="sym-btn active" data-sym="FOREXCOM:SPXUSD" data-name="S&amp;P 500">SPX</button>
+              <button class="sym-btn" data-sym="FOREXCOM:NSXUSD" data-name="NASDAQ 100">NDX</button>
+              <button class="sym-btn" data-sym="FOREXCOM:DJI" data-name="DOW Jones">DJI</button>
+              <button class="sym-btn" data-sym="KRX:KOSPI" data-name="KOSPI">KOSPI</button>
+              <button class="sym-btn" data-sym="TVC:NI225" data-name="NIKKEI 225">N225</button>
+              <button class="sym-btn" data-sym="TVC:HSI" data-name="HANG SENG">HSI</button>
+            </div>
+          </div>
+          <div class="tradingview-widget-container" id="main-chart-widget" style="height:520px;">
+            <div id="tradingview_main" style="height:100%;"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/tv.js" async></script>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini Chart Grid -->
+      <div class="section-row">
+        <h3 class="section-label">주요 지수 한눈에 보기</h3>
+        <div class="mini-grid">
+
+          <!-- SPX mini -->
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {
+                "symbol": "FOREXCOM:SPXUSD",
+                "width": "100%",
+                "height": "200",
+                "locale": "kr",
+                "dateRange": "12M",
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "autosize": true,
+                "largeChartUrl": ""
+              }
+              </script>
+            </div>
+          </div>
+
+          <!-- NASDAQ mini -->
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {
+                "symbol": "FOREXCOM:NSXUSD",
+                "width": "100%",
+                "height": "200",
+                "locale": "kr",
+                "dateRange": "12M",
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "autosize": true
+              }
+              </script>
+            </div>
+          </div>
+
+          <!-- DOW mini -->
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {
+                "symbol": "FOREXCOM:DJI",
+                "width": "100%",
+                "height": "200",
+                "locale": "kr",
+                "dateRange": "12M",
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "autosize": true
+              }
+              </script>
+            </div>
+          </div>
+
+          <!-- KOSPI mini -->
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {
+                "symbol": "KRX:KOSPI",
+                "width": "100%",
+                "height": "200",
+                "locale": "kr",
+                "dateRange": "12M",
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "autosize": true
+              }
+              </script>
+            </div>
+          </div>
+
+          <!-- NIKKEI mini -->
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {
+                "symbol": "TVC:NI225",
+                "width": "100%",
+                "height": "200",
+                "locale": "kr",
+                "dateRange": "12M",
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "autosize": true
+              }
+              </script>
+            </div>
+          </div>
+
+          <!-- HSI mini -->
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {
+                "symbol": "TVC:HSI",
+                "width": "100%",
+                "height": "200",
+                "locale": "kr",
+                "dateRange": "12M",
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "autosize": true
+              }
+              </script>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Market Overview -->
+      <div class="section-row">
+        <h3 class="section-label">시장 전체 개요</h3>
+        <div class="card overview-card">
+          <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+            {
+              "colorTheme": "dark",
+              "dateRange": "12M",
+              "showChart": true,
+              "locale": "kr",
+              "largeChartUrl": "",
+              "isTransparent": true,
+              "showSymbolLogo": true,
+              "showFloatingTooltip": false,
+              "width": "100%",
+              "height": "660",
+              "plotLineColorGrowing": "rgba(41, 181, 110, 1)",
+              "plotLineColorFalling": "rgba(226, 71, 71, 1)",
+              "gridLineColor": "rgba(42, 46, 57, 0)",
+              "scaleFontColor": "rgba(134, 137, 147, 1)",
+              "belowLineFillColorGrowing": "rgba(41, 181, 110, 0.12)",
+              "belowLineFillColorFalling": "rgba(226, 71, 71, 0.12)",
+              "belowLineFillColorGrowingBottom": "rgba(41, 181, 110, 0)",
+              "belowLineFillColorFallingBottom": "rgba(226, 71, 71, 0)",
+              "symbolActiveColor": "rgba(41, 181, 110, 0.12)",
+              "tabs": [
+                {
+                  "title": "주요 지수",
+                  "symbols": [
+                    {"s": "FOREXCOM:SPXUSD", "d": "S&P 500"},
+                    {"s": "FOREXCOM:NSXUSD", "d": "NASDAQ 100"},
+                    {"s": "FOREXCOM:DJI", "d": "DOW Jones"},
+                    {"s": "KRX:KOSPI", "d": "KOSPI"},
+                    {"s": "TVC:NI225", "d": "NIKKEI 225"},
+                    {"s": "TVC:HSI", "d": "HANG SENG"}
+                  ],
+                  "originalTitle": "Indices"
+                },
+                {
+                  "title": "원자재",
+                  "symbols": [
+                    {"s": "TVC:GOLD", "d": "Gold"},
+                    {"s": "TVC:SILVER", "d": "Silver"},
+                    {"s": "TVC:USOIL", "d": "WTI Crude"},
+                    {"s": "TVC:UKOIL", "d": "Brent Crude"}
+                  ],
+                  "originalTitle": "Commodities"
+                },
+                {
+                  "title": "외환",
+                  "symbols": [
+                    {"s": "FX_IDC:USDKRW", "d": "USD/KRW"},
+                    {"s": "FX:EURUSD", "d": "EUR/USD"},
+                    {"s": "FX:USDJPY", "d": "USD/JPY"},
+                    {"s": "FX:GBPUSD", "d": "GBP/USD"}
+                  ],
+                  "originalTitle": "Forex"
+                },
+                {
+                  "title": "암호화폐",
+                  "symbols": [
+                    {"s": "BITSTAMP:BTCUSD", "d": "Bitcoin"},
+                    {"s": "BITSTAMP:ETHUSD", "d": "Ethereum"},
+                    {"s": "COINBASE:SOLUSD", "d": "Solana"},
+                    {"s": "BINANCE:BNBUSDT", "d": "BNB"}
+                  ],
+                  "originalTitle": "Crypto"
+                }
+              ]
+            }
+            </script>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Tab: 개별 종목 -->
+    <section class="tab-section" id="tab-stocks">
+      <div class="section-row">
+        <div class="main-chart-container card">
+          <div class="card-header">
+            <h2 class="card-title">주요 개별 종목</h2>
+            <div class="symbol-buttons">
+              <button class="sym-btn active" data-sym="NASDAQ:NVDA" data-name="NVIDIA">NVDA</button>
+              <button class="sym-btn" data-sym="NASDAQ:AAPL" data-name="Apple">AAPL</button>
+              <button class="sym-btn" data-sym="NASDAQ:MSFT" data-name="Microsoft">MSFT</button>
+              <button class="sym-btn" data-sym="NASDAQ:TSLA" data-name="Tesla">TSLA</button>
+              <button class="sym-btn" data-sym="NASDAQ:AMZN" data-name="Amazon">AMZN</button>
+              <button class="sym-btn" data-sym="NASDAQ:META" data-name="Meta">META</button>
+            </div>
+          </div>
+          <div class="tradingview-widget-container" id="stocks-chart-widget" style="height:520px;">
+            <div id="tradingview_stocks" style="height:100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-row">
+        <h3 class="section-label">종목 스크리너</h3>
+        <div class="card screener-card">
+          <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
+            {
+              "width": "100%",
+              "height": 550,
+              "defaultColumn": "overview",
+              "defaultScreen": "most_capitalized",
+              "market": "america",
+              "showToolbar": true,
+              "colorTheme": "dark",
+              "locale": "kr",
+              "isTransparent": true
+            }
+            </script>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: 원자재/외환 -->
+    <section class="tab-section" id="tab-commodities">
+      <div class="section-row">
+        <div class="main-chart-container card">
+          <div class="card-header">
+            <h2 class="card-title">원자재 / 외환</h2>
+            <div class="symbol-buttons">
+              <button class="sym-btn active" data-sym="TVC:GOLD" data-name="Gold">금</button>
+              <button class="sym-btn" data-sym="TVC:SILVER" data-name="Silver">은</button>
+              <button class="sym-btn" data-sym="TVC:USOIL" data-name="WTI Crude Oil">WTI</button>
+              <button class="sym-btn" data-sym="TVC:UKOIL" data-name="Brent Crude">Brent</button>
+              <button class="sym-btn" data-sym="FX_IDC:USDKRW" data-name="USD/KRW">USD/KRW</button>
+              <button class="sym-btn" data-sym="FX:USDJPY" data-name="USD/JPY">USD/JPY</button>
+            </div>
+          </div>
+          <div class="tradingview-widget-container" id="commodities-chart-widget" style="height:520px;">
+            <div id="tradingview_commodities" style="height:100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-row">
+        <h3 class="section-label">원자재 / 외환 소형 차트</h3>
+        <div class="mini-grid">
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {"symbol":"TVC:GOLD","width":"100%","height":"200","locale":"kr","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":true}
+              </script>
+            </div>
+          </div>
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {"symbol":"TVC:SILVER","width":"100%","height":"200","locale":"kr","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":true}
+              </script>
+            </div>
+          </div>
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {"symbol":"TVC:USOIL","width":"100%","height":"200","locale":"kr","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":true}
+              </script>
+            </div>
+          </div>
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {"symbol":"FX_IDC:USDKRW","width":"100%","height":"200","locale":"kr","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":true}
+              </script>
+            </div>
+          </div>
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {"symbol":"FX:EURUSD","width":"100%","height":"200","locale":"kr","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":true}
+              </script>
+            </div>
+          </div>
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {"symbol":"FX:USDJPY","width":"100%","height":"200","locale":"kr","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":true}
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab: 암호화폐 -->
+    <section class="tab-section" id="tab-crypto">
+      <div class="section-row">
+        <div class="main-chart-container card">
+          <div class="card-header">
+            <h2 class="card-title">암호화폐</h2>
+            <div class="symbol-buttons">
+              <button class="sym-btn active" data-sym="BITSTAMP:BTCUSD" data-name="Bitcoin">BTC</button>
+              <button class="sym-btn" data-sym="BITSTAMP:ETHUSD" data-name="Ethereum">ETH</button>
+              <button class="sym-btn" data-sym="COINBASE:SOLUSD" data-name="Solana">SOL</button>
+              <button class="sym-btn" data-sym="BINANCE:BNBUSDT" data-name="BNB">BNB</button>
+              <button class="sym-btn" data-sym="COINBASE:XRPUSD" data-name="XRP">XRP</button>
+            </div>
+          </div>
+          <div class="tradingview-widget-container" id="crypto-chart-widget" style="height:520px;">
+            <div id="tradingview_crypto" style="height:100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-row">
+        <h3 class="section-label">암호화폐 소형 차트</h3>
+        <div class="mini-grid">
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {"symbol":"BITSTAMP:BTCUSD","width":"100%","height":"200","locale":"kr","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":true}
+              </script>
+            </div>
+          </div>
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {"symbol":"BITSTAMP:ETHUSD","width":"100%","height":"200","locale":"kr","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":true}
+              </script>
+            </div>
+          </div>
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {"symbol":"COINBASE:SOLUSD","width":"100%","height":"200","locale":"kr","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":true}
+              </script>
+            </div>
+          </div>
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {"symbol":"BINANCE:BNBUSDT","width":"100%","height":"200","locale":"kr","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":true}
+              </script>
+            </div>
+          </div>
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {"symbol":"COINBASE:XRPUSD","width":"100%","height":"200","locale":"kr","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":true}
+              </script>
+            </div>
+          </div>
+          <div class="mini-card card">
+            <div class="tradingview-widget-container" style="height:200px;">
+              <div class="tradingview-widget-container__widget" style="height:100%;"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+              {"symbol":"BINANCE:ADAUSDT","width":"100%","height":"200","locale":"kr","dateRange":"12M","colorTheme":"dark","isTransparent":true,"autosize":true}
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer id="site-footer">
+    <div class="footer-inner">
+      <p>데이터 제공: <a href="https://www.tradingview.com/" target="_blank" rel="noopener">TradingView</a> &nbsp;|&nbsp; 본 사이트는 개인 투자 참고용이며 투자 권유가 아닙니다.</p>
+      <p class="footer-time">최종 업데이트: <span id="last-updated"></span></p>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
