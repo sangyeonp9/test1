@@ -47,12 +47,6 @@
         <span class="logo-text">Financial Dashboard</span>
         <span class="logo-sub">실시간 금융 분석</span>
       </div>
-      <nav class="tab-nav">
-        <button class="tab-btn active" data-tab="indices">주요 지수</button>
-        <button class="tab-btn" data-tab="stocks">개별 종목</button>
-        <button class="tab-btn" data-tab="commodities">원자재/외환</button>
-        <button class="tab-btn" data-tab="crypto">암호화폐</button>
-      </nav>
       <div class="market-status" id="market-status">
         <span class="status-dot"></span>
         <span class="status-text">Market</span>
@@ -493,6 +487,14 @@
       <p class="footer-time">최종 업데이트: <span id="last-updated"></span></p>
     </div>
   </footer>
+
+  <!-- Bottom Tab Bar -->
+  <nav id="bottom-tab-bar">
+    <button class="tab-btn active" data-tab="indices">주요 지수</button>
+    <button class="tab-btn" data-tab="stocks">개별 종목</button>
+    <button class="tab-btn" data-tab="commodities">원자재/외환</button>
+    <button class="tab-btn" data-tab="crypto">암호화폐</button>
+  </nav>
 
   <script src="assets/js/main.js"></script>
 </body>
