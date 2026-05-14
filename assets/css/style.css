@@ -27,7 +27,7 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.5;
 }
 
@@ -55,11 +55,11 @@ a:hover { text-decoration: underline; }
 .header-inner {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 20px;
-  height: 60px;
+  padding: 0 24px;
+  height: 72px;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 28px;
 }
 
 .logo {
@@ -69,19 +69,19 @@ a:hover { text-decoration: underline; }
   flex-shrink: 0;
 }
 
-.logo-icon { font-size: 22px; }
+.logo-icon { font-size: 28px; }
 
 .logo-text {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.3px;
 }
 
 .logo-sub {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--text-secondary);
-  padding: 2px 6px;
+  padding: 3px 8px;
   border: 1px solid var(--border);
   border-radius: 4px;
 }
@@ -98,9 +98,9 @@ a:hover { text-decoration: underline; }
   background: none;
   border: none;
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
-  padding: 6px 16px;
+  padding: 8px 20px;
   border-radius: var(--radius);
   cursor: pointer;
   transition: var(--transition);
@@ -115,18 +115,18 @@ a:hover { text-decoration: underline; }
 .market-status {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   flex-shrink: 0;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-secondary);
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--accent-green);
-  box-shadow: 0 0 6px var(--accent-green);
+  box-shadow: 0 0 8px var(--accent-green);
   animation: pulse 2s infinite;
 }
 
@@ -151,12 +151,12 @@ a:hover { text-decoration: underline; }
 .section-row { margin-bottom: 28px; }
 
 .section-label {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 /* ===== Cards ===== */
@@ -171,17 +171,17 @@ a:hover { text-decoration: underline; }
 .card-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 20px;
+  gap: 20px;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--border);
   flex-wrap: wrap;
 }
 
 .card-title {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
-  min-width: 120px;
+  min-width: 140px;
 }
 
 /* ===== Symbol Buttons ===== */
@@ -195,9 +195,9 @@ a:hover { text-decoration: underline; }
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
-  padding: 4px 12px;
+  padding: 7px 16px;
   border-radius: 6px;
   cursor: pointer;
   transition: var(--transition);
@@ -249,10 +249,10 @@ a:hover { text-decoration: underline; }
 #site-footer {
   background: var(--bg-secondary);
   border-top: 1px solid var(--border);
-  padding: 20px;
+  padding: 24px;
   text-align: center;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .footer-inner { max-width: 1600px; margin: 0 auto; }
@@ -266,22 +266,22 @@ a:hover { text-decoration: underline; }
 }
 
 @media (max-width: 768px) {
-  .header-inner { flex-wrap: wrap; height: auto; padding: 12px 16px; gap: 12px; }
+  .header-inner { flex-wrap: wrap; height: auto; padding: 14px 16px; gap: 12px; }
   .logo-sub { display: none; }
   .tab-nav { order: 3; width: 100%; justify-content: flex-start; overflow-x: auto; padding-bottom: 4px; }
-  .tab-btn { padding: 5px 12px; font-size: 12px; }
+  .tab-btn { padding: 8px 14px; font-size: 14px; }
   .market-status { margin-left: auto; }
   #main-content { padding: 16px 12px 32px; }
   .mini-grid { grid-template-columns: 1fr; }
-  .card-header { padding: 12px 16px; }
-  .main-chart-container .tradingview-widget-container { height: 380px !important; }
-  .main-chart-container .tradingview-widget-container > div { height: 380px !important; }
+  .card-header { padding: 16px 18px; }
+  .main-chart-container .tradingview-widget-container { height: 420px !important; }
+  .main-chart-container .tradingview-widget-container > div { height: 420px !important; }
 }
 
 @media (max-width: 480px) {
-  .logo-text { font-size: 14px; }
-  .symbol-buttons { gap: 4px; }
-  .sym-btn { padding: 3px 9px; font-size: 11px; }
+  .logo-text { font-size: 17px; }
+  .symbol-buttons { gap: 6px; }
+  .sym-btn { padding: 6px 12px; font-size: 13px; }
 }
 
 /* ===== Scrollbar ===== */
