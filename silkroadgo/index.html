@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>실크로드고 홈페이지 시안 비교 · 평가</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Noto Sans KR',sans-serif; background:#0e1620; color:#e8edf2; line-height:1.7; }
+  a { color:inherit; }
+
+  .wrap { max-width:1240px; margin:0 auto; padding:0 24px; }
+
+  /* HERO */
+  header { text-align:center; padding:70px 24px 50px; background:linear-gradient(135deg,#0e1620,#16263a); border-bottom:1px solid #213348; }
+  header .tag { display:inline-block; font-size:0.75rem; font-weight:700; letter-spacing:2px; color:#e8a020; border:1px solid #e8a020; padding:6px 16px; border-radius:20px; margin-bottom:22px; }
+  header h1 { font-size:clamp(1.9rem,4vw,2.8rem); font-weight:900; line-height:1.25; margin-bottom:16px; }
+  header h1 span { color:#4a9abb; }
+  header p { color:#9fb0c0; max-width:620px; margin:0 auto; font-size:1.02rem; }
+  .meta { display:flex; gap:28px; justify-content:center; flex-wrap:wrap; margin-top:30px; font-size:0.85rem; color:#7d92a6; }
+  .meta b { color:#e8edf2; font-weight:700; }
+
+  section { padding:56px 0; }
+  .s-title { font-size:1.5rem; font-weight:900; margin-bottom:8px; display:flex; align-items:center; gap:12px; }
+  .s-title::before { content:''; width:5px; height:24px; background:#e8a020; border-radius:3px; }
+  .s-sub { color:#9fb0c0; margin-bottom:34px; font-size:0.96rem; }
+
+  /* DESIGN CARDS */
+  .designs { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+  .d-card { background:#16212e; border:1px solid #25374a; border-radius:18px; overflow:hidden; transition:transform .25s, box-shadow .25s; }
+  .d-card:hover { transform:translateY(-4px); box-shadow:0 16px 50px rgba(0,0,0,0.5); }
+  .d-head { padding:22px 26px; display:flex; align-items:center; justify-content:space-between; gap:12px; border-bottom:1px solid #25374a; }
+  .d-head h3 { font-size:1.2rem; font-weight:900; }
+  .d-head .pill { font-size:0.72rem; font-weight:700; padding:5px 13px; border-radius:20px; }
+  .pill-a { background:rgba(74,154,187,0.18); color:#7cc4dd; border:1px solid #356b80; }
+  .pill-b { background:rgba(255,90,31,0.16); color:#ff8a5f; border:1px solid #9c4a2a; }
+  .d-frame { position:relative; height:460px; overflow:hidden; background:#0a0f15; }
+  .d-frame iframe { width:1440px; height:1840px; border:0; transform:scale(0.42); transform-origin:top left; pointer-events:none; }
+  .d-frame .veil { position:absolute; inset:0; cursor:pointer; }
+  .d-body { padding:22px 26px 26px; }
+  .d-body .concept { font-size:0.9rem; color:#c3d0db; margin-bottom:16px; }
+  .d-tags { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  .d-tags span { font-size:0.76rem; background:#1f2e3e; border:1px solid #2c4156; color:#a9bccd; padding:5px 11px; border-radius:6px; }
+  .d-open { display:block; text-align:center; background:#e8a020; color:#10202c; font-weight:800; padding:14px; border-radius:10px; text-decoration:none; transition:opacity .2s; }
+  .d-open:hover { opacity:0.88; }
+  .d-card.b .d-open { background:#ff5a1f; color:#fff; }
+
+  /* MENU TABLE */
+  .menu-box { background:#16212e; border:1px solid #25374a; border-radius:16px; padding:30px; }
+  .menu-row { display:grid; grid-template-columns:180px 1fr; gap:20px; padding:16px 0; border-bottom:1px solid #223346; }
+  .menu-row:last-child { border-bottom:none; }
+  .menu-row .m-name { font-weight:800; color:#fff; display:flex; align-items:center; gap:8px; }
+  .menu-row .m-name em { font-style:normal; font-size:0.7rem; background:#e8a020; color:#10202c; padding:2px 8px; border-radius:4px; font-weight:700; }
+  .menu-row .m-desc { color:#9fb0c0; font-size:0.9rem; }
+
+  /* COMPARE TABLE */
+  table { width:100%; border-collapse:collapse; background:#16212e; border-radius:14px; overflow:hidden; }
+  th, td { padding:15px 18px; text-align:left; font-size:0.9rem; border-bottom:1px solid #223346; }
+  th { background:#1c2b3a; font-weight:700; color:#fff; font-size:0.82rem; }
+  td:first-child { color:#9fb0c0; font-weight:600; width:160px; }
+  tr:last-child td { border-bottom:none; }
+  .ck { color:#4ec78a; font-weight:700; }
+
+  /* EVAL */
+  .eval-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; }
+  .eval-card { background:#16212e; border:1px solid #25374a; border-radius:14px; padding:24px; }
+  .eval-card .n { font-size:1.6rem; }
+  .eval-card h4 { margin:10px 0 6px; font-size:1rem; }
+  .eval-card p { color:#9fb0c0; font-size:0.85rem; }
+
+  .note { background:linear-gradient(135deg,#1a2c3d,#16212e); border:1px solid #2c4156; border-left:4px solid #e8a020; border-radius:12px; padding:24px 28px; margin-top:30px; }
+  .note b { color:#e8a020; }
+  .note p { color:#c3d0db; font-size:0.92rem; }
+
+  footer { text-align:center; padding:40px 24px; color:#5d7488; font-size:0.82rem; border-top:1px solid #213348; margin-top:30px; }
+
+  @media (max-width:880px){
+    .designs { grid-template-columns:1fr; }
+    .menu-row { grid-template-columns:1fr; gap:4px; }
+    .d-frame { height:380px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="tag">홈페이지 시안 비교 · 내부 평가용</span>
+  <h1>실크로드고 — <span>키르기스스탄 여행</span><br>홈페이지 디자인 시안</h1>
+  <p>같은 콘텐츠를 두 가지 디자인 방향으로 제작했습니다. 아래 두 시안을 비교해 보시고, 어떤 방향이 우리 브랜드에 맞는지 의견을 남겨주세요.</p>
+  <div class="meta">
+    <div>제작 도구 · <b>아임웹(imweb)</b></div>
+    <div>목적 · <b>여행객 모집 + 추후 결제 연동</b></div>
+    <div>시안 · <b>2종 (A · B)</b></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 시안 비교 -->
+  <section>
+    <div class="s-title">두 가지 시안 미리보기</div>
+    <div class="s-sub">썸네일을 클릭하거나 버튼을 누르면 실제 홈페이지처럼 전체 화면으로 열립니다.</div>
+    <div class="designs">
+
+      <!-- A -->
+      <div class="d-card a">
+        <div class="d-head">
+          <h3>시안 A · 감성 프리미엄</h3>
+          <span class="pill pill-a">DESIGN A</span>
+        </div>
+        <div class="d-frame">
+          <iframe src="design-a.html" title="시안 A" scrolling="no" loading="lazy"></iframe>
+          <a class="veil" href="design-a.html" target="_blank" aria-label="시안 A 열기"></a>
+        </div>
+        <div class="d-body">
+          <p class="concept">깊은 청록 + 골드의 차분하고 고급스러운 분위기. 큰 사진과 세리프 제목으로 '한 번쯤 가보고 싶은 특별한 여행지'의 감성을 자극하는 방향입니다.</p>
+          <div class="d-tags"><span>청록 · 골드</span><span>세리프 타이틀</span><span>감성 · 신뢰</span><span>40~60대 선호</span></div>
+          <a class="d-open" href="design-a.html" target="_blank">시안 A 전체 화면으로 보기 →</a>
+        </div>
+      </div>
+
+      <!-- B -->
+      <div class="d-card b">
+        <div class="d-head">
+          <h3>시안 B · 모던 액티브</h3>
+          <span class="pill pill-b">DESIGN B</span>
+        </div>
+        <div class="d-frame">
+          <iframe src="design-b.html" title="시안 B" scrolling="no" loading="lazy"></iframe>
+          <a class="veil" href="design-b.html" target="_blank" aria-label="시안 B 열기"></a>
+        </div>
+        <div class="d-body">
+          <p class="concept">선명한 오렌지 + 잉크블랙의 역동적이고 트렌디한 분위기. 굵은 타이포와 매거진 레이아웃으로 '모험·트레킹'의 에너지를 강조하는 방향입니다.</p>
+          <div class="d-tags"><span>오렌지 · 블랙</span><span>볼드 산세리프</span><span>역동 · 모험</span><span>20~40대 선호</span></div>
+          <a class="d-open" href="design-b.html" target="_blank">시안 B 전체 화면으로 보기 →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 추천 메뉴 -->
+  <section>
+    <div class="s-title">추천 메인 메뉴 구성</div>
+    <div class="s-sub">국내 주요 여행사(하나투어·모두투어·노랑풍선)와 해외 부티크 여행사 사례를 비교해, 단일 여행지 전문 여행사에 꼭 필요한 메뉴만 추렸습니다.</div>
+    <div class="menu-box">
+      <div class="menu-row"><div class="m-name">여행지 소개 <em>핵심</em></div><div class="m-desc">키르기스스탄이 왜 매력적인지 — 자연·문화·접근성을 감성적으로 소개해 '가고 싶게' 만드는 페이지</div></div>
+      <div class="menu-row"><div class="m-name">여행 상품 <em>핵심</em></div><div class="m-desc">패키지별 상세 일정·가격·포함사항. 추후 결제 연동의 중심이 되는 메뉴 (코스별/테마별 분류)</div></div>
+      <div class="menu-row"><div class="m-name">여행 후기</div><div class="m-desc">실제 다녀온 고객 후기·사진. 신뢰를 만드는 가장 강력한 마케팅 요소</div></div>
+      <div class="menu-row"><div class="m-name">여행 정보 / 가이드</div><div class="m-desc">비자·항공·날씨·준비물·치안 등. 처음 가는 여행지의 불안을 해소하는 콘텐츠</div></div>
+      <div class="menu-row"><div class="m-name">이벤트 / 기획전</div><div class="m-desc">얼리버드·시즌 할인·테마 모객. 전환을 끌어올리는 마케팅 메뉴 (선택)</div></div>
+      <div class="menu-row"><div class="m-name">회사 소개</div><div class="m-desc">현지 경력·전문성·연락처. B2C 신뢰 확보 (푸터로 축소 가능)</div></div>
+      <div class="menu-row"><div class="m-name">상담 / 예약 <em>CTA</em></div><div class="m-desc">상단 우측 고정 버튼. 전화·카톡·문의폼으로 즉시 연결되는 전환 동선</div></div>
+    </div>
+  </section>
+
+  <!-- 비교표 -->
+  <section>
+    <div class="s-title">시안 A vs 시안 B 비교</div>
+    <div class="s-sub">동일한 메뉴·콘텐츠로 제작했으며, 디자인 언어만 다릅니다.</div>
+    <table>
+      <tr><th>항목</th><th>시안 A · 감성 프리미엄</th><th>시안 B · 모던 액티브</th></tr>
+      <tr><td>핵심 인상</td><td>차분함 · 고급스러움 · 신뢰</td><td>역동적 · 트렌디 · 모험</td></tr>
+      <tr><td>색상</td><td>딥 청록 + 골드</td><td>오렌지 + 잉크블랙 + 크림</td></tr>
+      <tr><td>제목 서체</td><td>세리프 (우아함)</td><td>볼드 산세리프 (강렬함)</td></tr>
+      <tr><td>상품 표현</td><td>카드형 그리드</td><td>넘버링 리스트(매거진형)</td></tr>
+      <tr><td>명소 표현</td><td>모자이크 그리드</td><td>가로 스크롤 갤러리</td></tr>
+      <tr><td>추천 타깃</td><td>40~60대, 프리미엄 여행객</td><td>20~40대, 액티브 여행객</td></tr>
+      <tr><td>공통 요소</td><td class="ck" colspan="2">반응형 · 상담폼 · FAQ · 후기 · 통계바 · CTA 배너 · 푸터 (모두 동일 탑재)</td></tr>
+    </table>
+  </section>
+
+  <!-- 평가 포인트 -->
+  <section>
+    <div class="s-title">이런 점을 봐주세요</div>
+    <div class="s-sub">평가하실 때 참고할 기준입니다.</div>
+    <div class="eval-grid">
+      <div class="eval-card"><div class="n">😍</div><h4>첫인상</h4><p>3초 안에 '가고 싶다'는 마음이 드나요?</p></div>
+      <div class="eval-card"><div class="n">🎯</div><h4>브랜드 적합성</h4><p>우리가 팔려는 여행의 느낌과 맞나요?</p></div>
+      <div class="eval-card"><div class="n">🧭</div><h4>메뉴 직관성</h4><p>원하는 정보를 쉽게 찾을 수 있나요?</p></div>
+      <div class="eval-card"><div class="n">📱</div><h4>모바일</h4><p>휴대폰에서 봐도 깔끔한가요? (창 크기를 줄여보세요)</p></div>
+      <div class="eval-card"><div class="n">🛒</div><h4>전환 동선</h4><p>상담·예약 버튼이 눈에 잘 띄나요?</p></div>
+    </div>
+
+    <div class="note">
+      <p><b>💡 평가 방법</b><br>두 시안을 각각 전체 화면으로 열어보고, 위 5가지 기준으로 비교해 주세요. 브라우저 창을 좁게 줄이면 모바일 화면도 확인할 수 있습니다. A·B 중 선택하거나, "A의 색감 + B의 상품 레이아웃"처럼 조합 의견도 환영합니다.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  실크로드고 (SilkRoadGo) · 키르기스스탄 전문 여행사 · 홈페이지 시안 비교 자료 · 아임웹 제작 예정<br>
+  ※ 본 페이지의 사진은 시안용 임시 이미지이며, 실제 제작 시 자사 촬영본/구매 이미지로 교체됩니다.
+</footer>
+
+</body>
+</html>
