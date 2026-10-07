@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>겨울코스 4박 6일 | Central Asia Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f0eb;
+      --bg-card: #ffffff;
+      --text: #1a1a2e;
+      --text-sub: #555;
+      --accent: #4a7c59;
+      --accent2: #c0392b;
+      --blue: #2980b9;
+      --gold: #d4a54a;
+      --border: #ddd;
+      --radius: 10px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ===== NAV ===== */
+    .site-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(26,26,46,0.95);
+      backdrop-filter: blur(10px);
+      padding: 0 24px;
+      border-bottom: 2px solid var(--gold);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      color: #fff; font-size: 18px; font-weight: 700;
+      letter-spacing: 1px; text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a {
+      color: rgba(255,255,255,0.7); text-decoration: none;
+      font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: #fff; }
+
+    /* ===== HERO MAP SECTION ===== */
+    .hero-map {
+      position: relative;
+      background: linear-gradient(135deg, #c9d6df 0%, #d5c9b1 50%, #b8c6d0 100%);
+      padding: 60px 24px 40px;
+      overflow: hidden;
+    }
+    .hero-map::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.3) 0%, transparent 60%);
+    }
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;
+    }
+    .hero-title-area {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .hero-title {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 36px; font-weight: 900; color: #1a1a2e;
+      letter-spacing: -1px; line-height: 1.2;
+    }
+    .hero-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px; font-weight: 700; color: #333;
+      letter-spacing: 2px; text-align: right; white-space: nowrap;
+    }
+    .hero-subtitle {
+      font-size: 15px; color: #444; margin-bottom: 30px;
+    }
+
+    /* ===== SVG MAP ===== */
+    .map-container {
+      width: 100%; max-width: 1100px; margin: 0 auto;
+      position: relative;
+    }
+    .map-container svg {
+      width: 100%; height: auto;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+    }
+
+    /* ===== MAP LEGEND ===== */
+    .map-legend {
+      margin-top: 20px;
+      font-size: 13px; color: #555;
+      line-height: 1.9;
+    }
+    .map-legend .num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #e74c3c; color: #fff; font-size: 11px;
+      font-weight: 700; margin-right: 2px;
+    }
+
+    /* ===== ITINERARY SECTION ===== */
+    .itinerary-section {
+      max-width: 1200px; margin: 0 auto;
+      padding: 60px 24px;
+    }
+    .section-title {
+      font-size: 28px; font-weight: 800; color: var(--text);
+      margin-bottom: 8px;
+    }
+    .section-desc {
+      font-size: 14px; color: var(--text-sub);
+      margin-bottom: 36px;
+    }
+    .season-label {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff; font-size: 13px; font-weight: 600;
+      padding: 6px 18px; border-radius: 4px 4px 0 0;
+      letter-spacing: 1px;
+    }
+
+    /* ===== TABLE ===== */
+    .itinerary-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 0 var(--radius) var(--radius) var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .itinerary-table th {
+      background: #f7f7f7;
+      font-size: 14px; font-weight: 700;
+      padding: 14px 12px;
+      border-bottom: 2px solid var(--border);
+      text-align: center;
+      color: var(--text);
+    }
+    .itinerary-table td {
+      padding: 16px 14px;
+      border-bottom: 1px solid #eee;
+      border-right: 1px solid #f0f0f0;
+      vertical-align: top;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .itinerary-table td:last-child { border-right: none; }
+    .itinerary-table tr:last-child td { border-bottom: none; }
+
+    .itinerary-table .day-header {
+      font-weight: 700; color: var(--accent);
+      font-size: 13px; display: block; margin-bottom: 4px;
+    }
+    .itinerary-table .route {
+      font-weight: 600; color: var(--text);
+      display: block; margin-bottom: 6px;
+    }
+    .itinerary-table .activity {
+      color: var(--text-sub); font-size: 13px;
+      display: block; padding-left: 8px;
+      position: relative;
+    }
+    .itinerary-table .activity::before {
+      content: '-'; position: absolute; left: 0;
+    }
+    .hotel-row td {
+      background: #fafaf5;
+      font-size: 13px; color: #666;
+      padding: 10px 14px;
+    }
+    .hotel-row .star { color: var(--gold); }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      background: #1a1a2e;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 30px 24px;
+      font-size: 12px;
+    }
+    .site-footer a { color: var(--gold); text-decoration: none; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .hero-title { font-size: 24px; }
+      .hero-brand { font-size: 13px; }
+      .hero-title-area { flex-direction: column; gap: 8px; }
+      .nav-links { gap: 12px; }
+      .nav-links a { font-size: 12px; }
+      .itinerary-table { font-size: 12px; display: block; overflow-x: auto; }
+      .section-title { font-size: 22px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-map { padding: 32px 16px 24px; }
+      .hero-title { font-size: 20px; }
+      .nav-logo { font-size: 15px; }
+    }
+
+    /* ===== ANIMATIONS ===== */
+    .route-line { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: drawLine 3s ease forwards; }
+    .route-line-d2 { animation-delay: 0.3s; }
+    .route-line-d3 { animation-delay: 1.2s; }
+    .route-line-d4 { animation-delay: 1.8s; }
+    .route-line-d5 { animation-delay: 2.4s; }
+    @keyframes drawLine { to { stroke-dashoffset: 0; } }
+
+    .map-marker { opacity: 0; animation: popIn 0.4s ease forwards; }
+    .map-marker:nth-child(1) { animation-delay: 0.2s; }
+    .map-marker:nth-child(2) { animation-delay: 0.6s; }
+    .map-marker:nth-child(3) { animation-delay: 1.0s; }
+    .map-marker:nth-child(4) { animation-delay: 1.4s; }
+    .map-marker:nth-child(5) { animation-delay: 1.8s; }
+    .map-marker:nth-child(6) { animation-delay: 2.2s; }
+    .map-marker:nth-child(7) { animation-delay: 2.6s; }
+    @keyframes popIn { to { opacity: 1; } }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">CENTRAL <span>ASIA</span> PROJECT</a>
+      <div class="nav-links">
+        <a href="/standard-course" class="active">코스 안내</a>
+        <a href="#">예약 문의</a>
+        <a href="#">갤러리</a>
+        <a href="#">회사 소개</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Map Section -->
+  <section class="hero-map">
+    <div class="hero-inner">
+      <div class="hero-title-area">
+        <div>
+          <h1 class="hero-title">겨울코스 4박 6일</h1>
+          <p class="hero-subtitle">설산 · 온천 · 별 — 겨울 하이라이트 코스</p>
+        </div>
+        <div class="hero-brand">CENTRAL ASIA PROJECT</div>
+      </div>
+
+      <div class="map-container">
+        <svg viewBox="0 0 1100 680" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="landGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#c9b896"/>
+              <stop offset="100%" stop-color="#b8a882"/>
+            </linearGradient>
+            <linearGradient id="lakeGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7eb8d4"/>
+              <stop offset="100%" stop-color="#5a9cb8"/>
+            </linearGradient>
+            <filter id="shadow1" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.2)"/>
+            </filter>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <marker id="arrowD2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#2980b9"/>
+            </marker>
+            <marker id="arrowD3" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#e67e22"/>
+            </marker>
+            <marker id="arrowD4" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#27ae60"/>
+            </marker>
+            <marker id="arrowD5" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#8e44ad"/>
+            </marker>
+          </defs>
+
+          <!-- Country Labels -->
+          <text x="380" y="80" font-size="14" fill="#888" font-weight="500" letter-spacing="4">KAZAKHSTAN</text>
+          <text x="100" y="560" font-size="14" fill="#888" font-weight="500" letter-spacing="4">TAJIKISTAN</text>
+          <text x="850" y="560" font-size="14" fill="#888" font-weight="500" letter-spacing="4">CHINA</text>
+
+          <!-- Kyrgyzstan outline (simplified) -->
+          <path d="M120,220 L180,170 L260,130 L350,110 L440,100 L530,95 L620,100 L700,115
+                   L780,140 L840,170 L890,210 L930,260 L950,310 L955,360
+                   L940,410 L910,450 L870,480 L820,505 L760,520 L690,530
+                   L620,535 L550,525 L480,510 L410,485 L350,450 L290,410
+                   L240,365 L200,310 L165,260 L130,240 Z"
+                fill="url(#landGrad)" stroke="#a09070" stroke-width="2"/>
+
+          <!-- Mountain decorations -->
+          <g fill="#9a8a6e" opacity="0.5">
+            <polygon points="220,330 235,295 250,330"/>
+            <polygon points="240,335 258,290 276,335"/>
+            <polygon points="310,380 325,340 340,380"/>
+            <polygon points="330,385 348,340 366,385"/>
+            <polygon points="780,360 795,320 810,360"/>
+            <polygon points="800,365 818,320 836,365"/>
+            <polygon points="490,420 508,375 526,420"/>
+            <polygon points="510,425 530,370 550,425"/>
+            <polygon points="690,310 705,270 720,310"/>
+            <polygon points="380,280 395,240 410,280"/>
+            <polygon points="590,470 608,425 626,470"/>
+            <polygon points="870,290 885,255 900,290"/>
+            <polygon points="170,360 185,325 200,360"/>
+          </g>
+          <!-- Snow caps -->
+          <g fill="#fff" opacity="0.7">
+            <polygon points="235,295 228,308 242,308"/>
+            <polygon points="258,290 250,305 266,305"/>
+            <polygon points="325,340 318,353 332,353"/>
+            <polygon points="795,320 788,333 802,333"/>
+            <polygon points="508,375 500,388 516,388"/>
+            <polygon points="705,270 698,283 712,283"/>
+            <polygon points="885,255 878,268 892,268"/>
+          </g>
+
+          <!-- Issyk-Kul Lake -->
+          <ellipse cx="620" cy="305" rx="160" ry="52"
+                   fill="url(#lakeGrad)" stroke="#5a9cb8" stroke-width="1.5" opacity="0.85"/>
+          <text x="595" y="300" font-size="16" fill="#fff" font-weight="700" opacity="0.9">이식쿨</text>
+          <text x="590" y="318" font-size="10" fill="#fff" opacity="0.7" letter-spacing="1">ISSYK-KUL</text>
+
+          <!-- Route Lines -->
+          <!-- Day 2: Bishkek → Skazka → Jeti-Oguz → Karakol (blue, south of lake) -->
+          <path d="M265,225 C370,260 450,370 570,380 C640,385 700,365 750,340 C800,318 835,290 860,270"
+                fill="none" stroke="#2980b9" stroke-width="2.5" stroke-dasharray="8,5"
+                class="route-line route-line-d2" marker-end="url(#arrowD2)"/>
+
+          <!-- Day 3: Karakol → Altyn-Arashan → Karakol (orange, loop east) -->
+          <path d="M870,270 C900,310 920,370 910,410 C905,430 890,420 880,390 C870,360 868,310 870,270"
+                fill="none" stroke="#e67e22" stroke-width="2.5" stroke-dasharray="8,5"
+                class="route-line route-line-d3" marker-end="url(#arrowD3)"/>
+
+          <!-- Day 4: Karakol → Cholpon-Ata → Bishkek (green, north of lake) -->
+          <path d="M860,260 C790,220 700,210 620,215 C540,220 460,230 380,225 C320,220 290,225 265,225"
+                fill="none" stroke="#27ae60" stroke-width="2.5" stroke-dasharray="8,5"
+                class="route-line route-line-d4" marker-end="url(#arrowD4)"/>
+
+          <!-- Day 5: Bishkek → Ala-Archa → Bishkek (purple, short loop south) -->
+          <path d="M265,230 C258,270 240,330 245,365 C248,380 262,375 268,350 C275,325 272,275 265,230"
+                fill="none" stroke="#8e44ad" stroke-width="2.5" stroke-dasharray="8,5"
+                class="route-line route-line-d5" marker-end="url(#arrowD5)"/>
+
+          <!-- Location Markers -->
+          <!-- 1. Bishkek -->
+          <g class="map-marker" filter="url(#shadow1)">
+            <circle cx="265" cy="225" r="28" fill="#fff" stroke="#c0392b" stroke-width="3"/>
+            <g transform="translate(250,203)">
+              <rect x="3" y="10" width="24" height="18" rx="2" fill="#c0392b" opacity="0.15"/>
+              <path d="M15,6 L8,14 L22,14 Z" fill="#c0392b"/>
+              <line x1="15" y1="6" x2="15" y2="2" stroke="#c0392b" stroke-width="1.5"/>
+              <rect x="6" y="14" width="4" height="4" fill="#c0392b" opacity="0.4"/>
+              <rect x="12" y="14" width="4" height="4" fill="#c0392b" opacity="0.4"/>
+              <rect x="20" y="14" width="4" height="4" fill="#c0392b" opacity="0.4"/>
+            </g>
+            <circle cx="265" cy="225" r="10" fill="#e74c3c"/>
+            <text x="265" y="229" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">1</text>
+          </g>
+          <g class="map-marker">
+            <rect x="190" y="250" width="72" height="26" rx="5" fill="#c0392b" filter="url(#shadow1)"/>
+            <text x="226" y="268" font-size="13" fill="#fff" font-weight="700" text-anchor="middle">비슈케크</text>
+          </g>
+
+          <!-- 2. Skazka Canyon -->
+          <g class="map-marker" filter="url(#shadow1)">
+            <circle cx="580" cy="380" r="22" fill="#fff" stroke="#d4a54a" stroke-width="3"/>
+            <g transform="translate(568, 366)">
+              <polygon points="12,0 6,14 18,14" fill="#d4a54a"/>
+              <polygon points="12,4 8,14 16,14" fill="#e8c36a"/>
+            </g>
+            <circle cx="580" cy="380" r="10" fill="#e74c3c"/>
+            <text x="580" y="384" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">2</text>
+          </g>
+          <g class="map-marker">
+            <rect x="505" y="400" width="100" height="26" rx="5" fill="#d4a54a" filter="url(#shadow1)"/>
+            <text x="555" y="418" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">스카즈카 캐니언</text>
+          </g>
+
+          <!-- 3. Jeti-Oguz -->
+          <g class="map-marker" filter="url(#shadow1)">
+            <circle cx="760" cy="350" r="22" fill="#fff" stroke="#c0392b" stroke-width="3"/>
+            <g transform="translate(748, 335)">
+              <polygon points="6,18 12,4 18,18" fill="#c0392b"/>
+              <polygon points="12,18 18,4 24,18" fill="#e74c3c"/>
+            </g>
+            <circle cx="760" cy="350" r="10" fill="#e74c3c"/>
+            <text x="760" y="354" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">3</text>
+          </g>
+          <g class="map-marker">
+            <rect x="710" y="375" width="80" height="26" rx="5" fill="#c0392b" filter="url(#shadow1)"/>
+            <text x="750" y="393" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">제티오구즈</text>
+          </g>
+
+          <!-- 4. Karakol -->
+          <g class="map-marker" filter="url(#shadow1)">
+            <circle cx="865" cy="265" r="26" fill="#fff" stroke="#2980b9" stroke-width="3"/>
+            <g transform="translate(851,247)">
+              <rect x="3" y="8" width="22" height="16" rx="2" fill="#2980b9" opacity="0.2"/>
+              <rect x="6" y="4" width="16" height="20" rx="1" fill="#2980b9" opacity="0.3"/>
+              <rect x="9" y="10" width="4" height="4" fill="#2980b9" opacity="0.6"/>
+              <rect x="15" y="10" width="4" height="4" fill="#2980b9" opacity="0.6"/>
+              <rect x="9" y="16" width="4" height="4" fill="#2980b9" opacity="0.6"/>
+              <rect x="15" y="16" width="4" height="4" fill="#2980b9" opacity="0.6"/>
+            </g>
+            <circle cx="865" cy="265" r="10" fill="#e74c3c"/>
+            <text x="865" y="269" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">4</text>
+          </g>
+          <g class="map-marker">
+            <rect x="810" y="230" width="110" height="26" rx="5" fill="#c0392b" filter="url(#shadow1)"/>
+            <text x="865" y="248" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">카라콜 · 제티오구즈</text>
+          </g>
+
+          <!-- 5. Altyn-Arashan -->
+          <g class="map-marker" filter="url(#shadow1)">
+            <circle cx="905" cy="415" r="24" fill="#fff" stroke="#27ae60" stroke-width="3"/>
+            <g transform="translate(891, 398)">
+              <polygon points="14,2 6,18 22,18" fill="#27ae60"/>
+              <polygon points="14,6 9,18 19,18" fill="#2ecc71"/>
+              <circle cx="14" cy="14" r="3" fill="#fff" opacity="0.6"/>
+            </g>
+            <circle cx="905" cy="415" r="10" fill="#e74c3c"/>
+            <text x="905" y="419" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">5</text>
+          </g>
+          <g class="map-marker">
+            <rect x="840" y="442" width="90" height="26" rx="5" fill="#27ae60" filter="url(#shadow1)"/>
+            <text x="885" y="460" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">알틴아라산</text>
+          </g>
+
+          <!-- 6. Cholpon-Ata -->
+          <g class="map-marker" filter="url(#shadow1)">
+            <circle cx="540" cy="240" r="22" fill="#fff" stroke="#d4a54a" stroke-width="3"/>
+            <g transform="translate(526, 225)">
+              <ellipse cx="14" cy="12" rx="10" ry="6" fill="#5a9cb8" opacity="0.4"/>
+              <path d="M8,12 Q14,4 20,12" stroke="#d4a54a" fill="none" stroke-width="1.5"/>
+              <circle cx="14" cy="8" r="2" fill="#d4a54a"/>
+            </g>
+            <circle cx="540" cy="240" r="10" fill="#27ae60"/>
+            <text x="540" y="244" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">6</text>
+          </g>
+          <g class="map-marker">
+            <rect x="470" y="210" width="70" height="26" rx="5" fill="#d4a54a" filter="url(#shadow1)"/>
+            <text x="505" y="228" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">촐폰아타</text>
+          </g>
+
+          <!-- 7. Ala-Archa -->
+          <g class="map-marker" filter="url(#shadow1)">
+            <circle cx="250" cy="370" r="22" fill="#fff" stroke="#8e44ad" stroke-width="3"/>
+            <g transform="translate(236, 353)">
+              <polygon points="14,2 6,18 22,18" fill="#8e44ad"/>
+              <polygon points="14,7 9,18 19,18" fill="#9b59b6"/>
+              <polygon points="10,18 14,12 18,18" fill="#fff" opacity="0.3"/>
+            </g>
+            <circle cx="250" cy="370" r="10" fill="#8e44ad"/>
+            <text x="250" y="374" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">7</text>
+          </g>
+          <g class="map-marker">
+            <rect x="150" y="390" width="130" height="26" rx="5" fill="#8e44ad" filter="url(#shadow1)"/>
+            <text x="215" y="408" font-size="12" fill="#fff" font-weight="700" text-anchor="middle">알라아르차 국립공원</text>
+          </g>
+
+          <!-- Day labels on routes -->
+          <g font-size="11" font-weight="600">
+            <rect x="420" y="350" width="52" height="20" rx="4" fill="#2980b9" opacity="0.9"/>
+            <text x="446" y="364" fill="#fff" text-anchor="middle" font-size="10">DAY 2</text>
+
+            <rect x="920" y="340" width="52" height="20" rx="4" fill="#e67e22" opacity="0.9"/>
+            <text x="946" y="354" fill="#fff" text-anchor="middle" font-size="10">DAY 3</text>
+
+            <rect x="420" y="200" width="52" height="20" rx="4" fill="#27ae60" opacity="0.9"/>
+            <text x="446" y="214" fill="#fff" text-anchor="middle" font-size="10">DAY 4</text>
+
+            <rect x="195" y="300" width="52" height="20" rx="4" fill="#8e44ad" opacity="0.9"/>
+            <text x="221" y="314" fill="#fff" text-anchor="middle" font-size="10">DAY 5</text>
+          </g>
+
+          <!-- Scale -->
+          <line x1="880" y1="530" x2="980" y2="530" stroke="#888" stroke-width="1.5"/>
+          <line x1="880" y1="526" x2="880" y2="534" stroke="#888" stroke-width="1.5"/>
+          <line x1="980" y1="526" x2="980" y2="534" stroke="#888" stroke-width="1.5"/>
+          <text x="930" y="525" font-size="11" fill="#888" text-anchor="middle">100 km</text>
+        </svg>
+      </div>
+
+      <div class="map-legend">
+        <span class="num">1</span> 비슈케크 &nbsp;
+        <span class="num">2</span> 스카즈카 캐니언 &nbsp;
+        <span class="num">3</span> 제티오구즈 &nbsp;
+        <span class="num">4</span> 카라콜 · 제티오구즈 &nbsp;
+        <span class="num">5</span> 알틴아라산(승마 · 온천 · 별) &nbsp;
+        <span class="num" style="background:#27ae60;">6</span> 촐폰아타 온천 &nbsp;
+        <span class="num" style="background:#8e44ad;">7</span> 알라아르차 국립공원
+      </div>
+    </div>
+  </section>
+
+  <!-- Itinerary Table -->
+  <section class="itinerary-section">
+    <h2 class="section-title">일정표</h2>
+    <p class="section-desc">겨울코스 4박 6일 상세 일정</p>
+
+    <div class="season-label">겨울 4박 6일 일정</div>
+    <table class="itinerary-table">
+      <thead>
+        <tr>
+          <th style="width:20%">1 - DAY</th>
+          <th style="width:20%">2 - DAY</th>
+          <th style="width:20%">3 - DAY</th>
+          <th style="width:20%">4 - DAY</th>
+          <th style="width:20%">5 - DAY</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <span class="route">✈ 인천 - 비슈케크</span>
+            <span class="activity">티웨이 항공</span>
+          </td>
+          <td>
+            <span class="route">비슈케크 - 카라콜</span>
+            <span class="activity">제티오구즈 파노라마</span>
+            <span class="activity">스카즈카 캐니언</span>
+          </td>
+          <td>
+            <span class="route">✈ 겨울 알틴아라산 투어</span>
+            <span class="activity">승마체험</span>
+            <span class="activity">노천 온천체험</span>
+            <span class="activity">설원 하이킹</span>
+          </td>
+          <td>
+            <span class="route">✈ 카라콜 - 비슈케크</span>
+            <span class="activity">이식쿨 촐폰아타</span>
+            <span class="activity">호수 정원 산책</span>
+          </td>
+          <td>
+            <span class="route">✈ 비슈케크 - 인천</span>
+            <span class="activity">알라아르차 국립공원</span>
+            <span class="activity">시티투어</span>
+          </td>
+        </tr>
+        <tr class="hotel-row">
+          <td><span class="star">☆</span> 다마스 호텔<br><span class="star">☆</span> 소피아 호텔 외</td>
+          <td><span class="star">☆</span> 카라갓 호텔<br><span class="star">★</span> 78 호텔 외</td>
+          <td><span class="star">☆</span> 카라갓 호텔<br><span class="star">★</span> 78 호텔 외</td>
+          <td><span class="star">☆</span> 다마스 호텔<br><span class="star">☆</span> 소피아 호텔 외</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>&copy; 2026 Central Asia Project. All rights reserved.</p>
+    <p><a href="https://www.centralasiaproject.kr">www.centralasiaproject.kr</a></p>
+  </footer>
+
+</body>
+</html>
