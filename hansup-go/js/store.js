@@ -20,6 +20,7 @@ function defaultState() {
     color: '#3f8fd2',
     group: '',
     balls: CONFIG.startBalls,
+    snacks: CONFIG.startSnacks,
     xp: 0,
     caught: {},        // speciesId -> { count, firstAt, bestSize }
     caughtSpawns: {},  // spawnId -> timestamp (같은 몬스터를 두 번 잡지 않도록)
