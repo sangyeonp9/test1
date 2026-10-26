@@ -1,6 +1,6 @@
 // 플레이어 기록 저장
 // - 내 기록은 항상 이 휴대폰(localStorage)에 저장됩니다.
-// - Firebase가 설정되어 있으면 가족 코드 그룹으로 기록을 공유합니다.
+// - Firebase가 설정되어 있으면 친구 코드 그룹으로 기록을 공유합니다.
 //   공유되는 정보: 닉네임, 레벨, 잡은 몬스터 수 (위치 정보는 공유하지 않습니다)
 
 import { CONFIG, firebaseEnabled } from './config.js';
@@ -99,7 +99,7 @@ export function xpForLevel(level) {
   return (level - 1) ** 2 * 400;
 }
 
-// ---------- 가족 공유 (Firebase Firestore) ----------
+// ---------- 친구 공유 (Firebase Firestore) ----------
 
 export const remote = {
   ready: false,
@@ -130,8 +130,8 @@ export const remote = {
       this.ready = true;
       return true;
     } catch (e) {
-      console.warn('가족 공유 연결 실패', e);
-      this.error = '가족 공유 서버에 연결하지 못했습니다. 인터넷 연결과 Firebase 설정을 확인해 주세요.';
+      console.warn('친구 공유 연결 실패', e);
+      this.error = '친구 공유 서버에 연결하지 못했습니다. 인터넷 연결과 Firebase 설정을 확인해 주세요.';
       return false;
     }
   },
@@ -150,7 +150,7 @@ export const remote = {
     this.unsubs.push(onSnapshot(collection(this.db, ...base, 'players'), (snap) => {
       this.players = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
       this.emit();
-    }, (e) => { this.error = '가족 기록을 불러오지 못했습니다.'; console.warn(e); this.emit(); }));
+    }, (e) => { this.error = '친구 기록을 불러오지 못했습니다.'; console.warn(e); this.emit(); }));
     this.unsubs.push(onSnapshot(
       query(collection(this.db, ...base, 'feed'), orderBy('at', 'desc'), limit(25)),
       (snap) => { this.feed = snap.docs.map(d => d.data()); this.emit(); },

@@ -1,7 +1,7 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 가족 코드(groups/{코드}) 안에서만 읽고 쓸 수 있습니다.
+    // 친구 코드(groups/{코드}) 안에서만 읽고 쓸 수 있습니다.
     match /groups/{group}/players/{uid} {
       allow read: if request.auth != null;
       // 자기 기록만 쓸 수 있음

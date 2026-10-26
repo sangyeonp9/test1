@@ -1,5 +1,5 @@
 // 한숲GO 설정 파일
-// 거점 위치, 출현 규칙, 가족 공유(Firebase) 설정을 여기서 바꿀 수 있습니다.
+// 거점 위치, 출현 규칙, 친구 공유(Firebase) 설정을 여기서 바꿀 수 있습니다.
 
 export const CONFIG = {
   gameName: '한숲GO',
@@ -42,9 +42,9 @@ export const CONFIG = {
   specialStopBalls: 10,
   stopCooldownMinutes: 5,
 
-  // 가족 공유 도감 (Firebase)
+  // 친구 공유 도감 (Firebase)
   // README.md의 안내대로 Firebase 프로젝트를 만든 뒤 아래 값을 채우면
-  // 가족끼리 도감과 순위를 함께 볼 수 있습니다. 비워 두면 혼자 하기 모드로 동작합니다.
+  // 친구끼리 도감과 순위를 함께 볼 수 있습니다. 비워 두면 혼자 하기 모드로 동작합니다.
   firebase: {
     apiKey: '',
     authDomain: '',
