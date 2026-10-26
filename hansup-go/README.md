@@ -20,10 +20,14 @@
 
 ## 1. 휴대폰에서 열기 (GitHub Pages)
 
-이 저장소는 `main` 브랜치에 올라가면 GitHub Pages로 자동 배포됩니다.
+이 저장소의 Pages 워크플로(`.github/workflows/pages.yml`)는 `main` 브랜치에 push될 때 실행되는데,
+지금 저장소에는 `main` 브랜치가 없고 기본 브랜치가 `claude/financial-chart-website-3wk87`입니다.
 
-1. 이 PR을 `main`에 병합합니다.
-2. GitHub 저장소 → **Settings → Pages**에서 Source가 **GitHub Actions**인지 확인합니다.
+1. 이 PR을 기본 브랜치에 병합합니다.
+2. GitHub 저장소 → **Settings → Pages**에서 배포 방식을 확인합니다.
+   - **Deploy from a branch**라면 기본 브랜치의 `/ (root)`를 선택합니다.
+   - **GitHub Actions**라면 **Actions → Deploy to GitHub Pages → Run workflow**로 직접 실행하거나,
+     `pages.yml`의 `branches: [main]`을 기본 브랜치 이름으로 바꿉니다.
 3. 배포가 끝나면 휴대폰 크롬에서 엽니다:
    `https://sangyeonp9.github.io/test1/hansup-go/`
 4. 크롬 메뉴 → **홈 화면에 추가**를 누르면 앱처럼 쓸 수 있습니다.
