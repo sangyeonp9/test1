@@ -20,14 +20,11 @@
 
 ## 1. 휴대폰에서 열기 (GitHub Pages)
 
-이 저장소의 Pages 워크플로(`.github/workflows/pages.yml`)는 `main` 브랜치에 push될 때 실행되는데,
-지금 저장소에는 `main` 브랜치가 없고 기본 브랜치가 `claude/financial-chart-website-3wk87`입니다.
+이 저장소는 기본 브랜치(`claude/financial-chart-website-3wk87`)에 병합되면 GitHub Pages로 자동 배포됩니다.
+따로 설정을 바꿀 필요는 없습니다.
 
-1. 이 PR을 기본 브랜치에 병합합니다.
-2. GitHub 저장소 → **Settings → Pages**에서 배포 방식을 확인합니다.
-   - **Deploy from a branch**라면 기본 브랜치의 `/ (root)`를 선택합니다.
-   - **GitHub Actions**라면 **Actions → Deploy to GitHub Pages → Run workflow**로 직접 실행하거나,
-     `pages.yml`의 `branches: [main]`을 기본 브랜치 이름으로 바꿉니다.
+1. 변경 사항을 기본 브랜치에 병합합니다.
+2. 저장소의 **Actions** 탭에서 `pages build and deployment`가 끝나기를 기다립니다 (1분 내외).
 3. 배포가 끝나면 휴대폰 크롬에서 엽니다:
    `https://sangyeonp9.github.io/test1/hansup-go/`
 4. 크롬 메뉴 → **홈 화면에 추가**를 누르면 앱처럼 쓸 수 있습니다.
@@ -52,7 +49,7 @@ Firebase의 `apiKey`는 비밀번호가 아니라 앱을 구분하는 값이라 
 
 ## 3. 거점 위치 고치기
 
-`js/config.js`의 거점 좌표는 **근사치**입니다 (5단지만 실제 주소 기준 좌표).
+`js/config.js`의 거점 좌표 중 **남곡초등학교(한숲로 110)와 5단지(한숲로 83)는 확인된 좌표**이고, 나머지 단지는 **근사치**입니다.
 정확한 위치로 고치려면:
 
 1. 게임 지도에서 원하는 지점을 **길게 누르면** 좌표가 나옵니다 (또는 네이버/카카오 지도에서 확인).

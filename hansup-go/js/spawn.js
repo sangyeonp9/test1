@@ -113,7 +113,8 @@ export function spawnsAround(pos, radius = CONFIG.visibleRadius, now = Date.now(
   for (let cx = x0; cx <= x1; cx++) {
     for (let cy = y0; cy <= y1; cy++) {
       const s = spawnForCell(cx, cy, slot, date);
-      if (s && distanceM(pos, s) <= radius) out.push(s);
+      // 거점 표시를 가리지 않도록 거점 바로 옆에는 몬스터를 두지 않음
+      if (s && distanceM(pos, s) <= radius && !CONFIG.stops.some(st => distanceM(st, s) < 40)) out.push(s);
     }
   }
   return out;

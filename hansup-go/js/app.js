@@ -113,7 +113,7 @@ function initMap() {
   });
 
   for (const stop of CONFIG.stops) {
-    const m = L.marker([stop.lat, stop.lng], { icon: stopIcon(stop, stopReady(stop)), zIndexOffset: -100 })
+    const m = L.marker([stop.lat, stop.lng], { icon: stopIcon(stop, stopReady(stop)), zIndexOffset: 500 })
       .addTo(map)
       .on('click', () => useStop(stop));
     stopMarkers.set(stop.id, m);
