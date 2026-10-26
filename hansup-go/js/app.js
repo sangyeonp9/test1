@@ -1,4 +1,4 @@
-// 한숲GO 메인: 지도, 위치 추적, 도감, 가족 탭
+// 한숲GO 메인: 지도, 위치 추적, 도감, 친구 탭
 
 import { CONFIG, firebaseEnabled } from './config.js';
 import { SPECIES, RARITY, speciesById, monsterSVG } from './monsters.js';
@@ -380,14 +380,14 @@ function showSpecies(id) {
   $('sp-sheet').hidden = false;
 }
 
-// ---------- 가족 ----------
+// ---------- 친구 ----------
 function renderFamily() {
   const s = store.state;
   const box = $('family-body');
   if (!firebaseEnabled()) {
     box.innerHTML = `<div class="notice">
-      <h3>가족 공유가 아직 꺼져 있어요</h3>
-      <p>가족·친구와 도감을 함께 보려면 무료 Firebase 프로젝트를 한 번만 연결하면 됩니다.
+      <h3>친구 공유가 아직 꺼져 있어요</h3>
+      <p>친구들과 도감을 함께 보려면 무료 Firebase 프로젝트를 한 번만 연결하면 됩니다.
       설정 방법은 <b>hansup-go/README.md</b>에 있어요. 연결 전에는 내 기록만 이 휴대폰에 저장됩니다.</p></div>
       ${familyList([{ uid: 'me', name: s.name || '나', color: s.color, level: levelFromXp(s.xp), species: store.speciesCount(), total: store.totalCaught(),
         caught: Object.fromEntries(Object.entries(s.caught).map(([k, v]) => [k, v.count])) }], 'me')}`;
@@ -395,8 +395,8 @@ function renderFamily() {
     return;
   }
   if (!s.group) {
-    box.innerHTML = `<div class="notice"><h3>가족 코드를 정해 주세요</h3>
-      <p>설정 탭에서 가족 코드를 입력하면 같은 코드를 쓰는 사람끼리 도감과 순위를 함께 볼 수 있어요.</p></div>`;
+    box.innerHTML = `<div class="notice"><h3>친구 코드를 정해 주세요</h3>
+      <p>설정 탭에서 친구 코드를 입력하면 같은 코드를 쓰는 사람끼리 도감과 순위를 함께 볼 수 있어요.</p></div>`;
     return;
   }
   if (remote.error) {
@@ -411,7 +411,7 @@ function renderFamily() {
     return `<li><span class="mini-av" style="background:${esc(f.color || '#888')}">${esc((f.name || '?').slice(0, 1))}</span>
       <span><b>${esc(f.name)}</b>님이 ${sp.name}을(를) 잡았어요${f.isNew ? ' <em>NEW</em>' : ''}</span><time>${when}</time></li>`;
   }).join('');
-  box.innerHTML = `<p class="group-code">가족 코드 <b>${esc(s.group)}</b> · ${players.length}명 참여 중</p>
+  box.innerHTML = `<p class="group-code">친구 코드 <b>${esc(s.group)}</b> · ${players.length}명 참여 중</p>
     ${players.length ? familyList(players, remote.uid) : '<p class="muted">아직 기록이 없어요. 몬스터를 잡으면 여기에 나타나요.</p>'}
     <h3 class="sub">최근 소식</h3>
     <ul class="feed">${feed || '<li class="muted">아직 소식이 없어요.</li>'}</ul>`;
@@ -448,8 +448,8 @@ function renderSettings() {
   $('set-group').value = s.group;
   $('set-demo').checked = s.demo;
   $('set-share').textContent = firebaseEnabled()
-    ? (remote.ready ? '가족 공유 연결됨' : '가족 공유 연결 중...')
-    : '가족 공유 꺼짐 (README 참고)';
+    ? (remote.ready ? '친구 공유 연결됨' : '친구 공유 연결 중...')
+    : '친구 공유 꺼짐 (README 참고)';
   renderColors('set-colors');
 }
 

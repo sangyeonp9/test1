@@ -205,7 +205,7 @@ body.demo .demo-badge { display: block; }
 .dex-grid.small .dex-card { cursor: default; }
 .dex-grid.small svg { width: 60px; height: 60px; }
 
-/* ---------- 가족 ---------- */
+/* ---------- 친구 ---------- */
 .notice { background: var(--card); border: 2px dashed var(--line); border-radius: 16px; padding: 14px 16px; }
 .notice h3 { font-size: 18px; color: var(--forest-d); margin-bottom: 4px; }
 .notice p { margin: 0; line-height: 1.6; }
