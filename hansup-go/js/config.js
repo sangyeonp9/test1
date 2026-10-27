@@ -54,13 +54,13 @@ export const CONFIG = {
   stopCooldownMinutes: 5,
 
   // 친구 공유 도감 (Firebase)
-  // README.md의 안내대로 Firebase 프로젝트를 만든 뒤 아래 값을 채우면
-  // 친구끼리 도감과 순위를 함께 볼 수 있습니다. 비워 두면 혼자 하기 모드로 동작합니다.
+  // 같은 친구 코드를 쓰는 사람끼리 도감과 순위를 함께 봅니다. 값을 비우면 혼자 하기 모드로 동작합니다.
+  // apiKey는 비밀번호가 아니라 앱을 구분하는 공개 값이고, 데이터는 firestore.rules로 보호됩니다.
   firebase: {
-    apiKey: '',
-    authDomain: '',
-    projectId: '',
-    appId: '',
+    apiKey: 'AIzaSyB1GSOrEil8UhTuSBAAcu0lYAk8wDoALJs',
+    authDomain: 'hansup-go.firebaseapp.com',
+    projectId: 'hansup-go',
+    appId: '1:939735711607:web:e5fb12a0b32917601ceb72',
   },
 };
 
