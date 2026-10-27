@@ -109,6 +109,7 @@ export const remote = {
   fs: null,
   db: null,
   pushTimer: null,
+  lastSent: '',
   unsubs: [],
   players: [],
   feed: [],
@@ -158,26 +159,37 @@ export const remote = {
       (e) => console.warn(e)));
   },
 
+  // 친구 화면에 보이는 내용만 뽑는다 (숲볼·간식 개수는 공유하지 않음)
+  shared(state) {
+    const caught = Object.fromEntries(Object.entries(state.caught).map(([k, v]) => [k, v.count]));
+    return {
+      name: state.name.slice(0, 12),
+      color: state.color,
+      xp: state.xp,
+      level: levelFromXp(state.xp),
+      species: Object.keys(caught).length,
+      total: Object.values(caught).reduce((a, b) => a + b, 0),
+      caught,
+    };
+  },
+
+  // 친구 화면에 보이는 내용이 바뀌었을 때만 서버에 올린다 (무료 사용량 절약)
   schedulePush(state) {
     if (!this.ready || !state.group || !state.name) return;
+    const key = state.group + '|' + JSON.stringify(this.shared(state));
+    if (key === this.lastSent) return;
     clearTimeout(this.pushTimer);
     this.pushTimer = setTimeout(() => this.push(state), 800);
   },
 
   async push(state) {
     const { doc, setDoc, serverTimestamp } = this.fs;
-    const caught = Object.fromEntries(Object.entries(state.caught).map(([k, v]) => [k, v.count]));
+    const data = this.shared(state);
+    const key = state.group + '|' + JSON.stringify(data);
+    if (key === this.lastSent) return;
     try {
-      await setDoc(doc(this.db, 'groups', state.group, 'players', this.uid), {
-        name: state.name.slice(0, 12),
-        color: state.color,
-        xp: state.xp,
-        level: levelFromXp(state.xp),
-        species: Object.keys(caught).length,
-        total: Object.values(caught).reduce((a, b) => a + b, 0),
-        caught,
-        updatedAt: serverTimestamp(),
-      });
+      await setDoc(doc(this.db, 'groups', state.group, 'players', this.uid), { ...data, updatedAt: serverTimestamp() });
+      this.lastSent = key;
     } catch (e) { console.warn('기록 공유 실패', e); }
   },
 
