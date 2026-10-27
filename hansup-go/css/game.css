@@ -487,3 +487,18 @@ body.in-encounter .toast { bottom: calc(140px + var(--safe-b)); }
   .enc-monster.flying svg, .mode-fish .enc-monster svg, .enc-monster.happy svg { animation: none; }
 }
 .fish-btn:active { transform: translateX(-50%) translateY(3px); }
+
+/* ---------- 3D 캐릭터 ---------- */
+.enc-3d { position: absolute; inset: 0; pointer-events: none; }
+.enc-3d .stage3d-canvas { width: 100%; height: 100%; display: block; }
+.enc-xr {
+  position: absolute; z-index: 3; right: max(12px, env(safe-area-inset-right));
+  top: calc(var(--safe-t) + 62px); background: var(--sun); color: #3b2f00;
+}
+.encounter.xr-on { background: transparent; }
+.encounter.xr-on .enc-bg, .encounter.xr-on video { display: none; }
+.sp-3d { width: 220px; height: 220px; max-width: 100%; touch-action: pan-y; cursor: grab; position: relative; }
+.sp-3d .stage3d-canvas { width: 100%; height: 100%; display: block; }
+.sp-3d-hint { font-size: 12px; color: var(--muted); margin-top: -4px; }
+.encounter.is3d .enc-msg { top: calc(var(--safe-t) + 116px); }
+.encounter.is3d .enc-xr { right: auto; left: max(12px, env(safe-area-inset-left)); }

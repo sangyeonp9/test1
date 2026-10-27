@@ -5,6 +5,7 @@ import { SPECIES, RARITY, KINDS, speciesById, monsterSVG, josa, habitatText } fr
 import { spawnsAround, distanceM, specialEncounter, isNight } from './spawn.js';
 import { store, remote, levelFromXp, xpForLevel } from './store.js';
 import { startEncounter, initEncounterUI, encounterActive } from './catch.js';
+import { loadThree, createViewer } from './stage3d.js';
 
 const $ = (id) => document.getElementById(id);
 const COLORS = ['#3f8fd2', '#e8532b', '#4f9a3a', '#a45ee5', '#e8a317', '#e86f9b'];
@@ -388,13 +389,21 @@ function renderDex() {
   }
 }
 
+let viewer = null;
+function closeViewer() {
+  viewer?.dispose();
+  viewer = null;
+}
+
 function showSpecies(id) {
+  closeViewer();
   const sp = speciesById[id];
   const c = store.state.caught[id];
   const kind = KINDS[sp.kind];
   const rar = `<span style="--rarity:${RARITY[sp.rarity].color}" class="dex-rar">${RARITY[sp.rarity].label}</span>`;
   $('sp-body').innerHTML = c
-    ? `${monsterSVG(sp, { size: 160 })}
+    ? `<div id="sp-3d" class="sp-3d">${monsterSVG(sp, { size: 160 })}</div>
+       <p id="sp-3d-hint" class="sp-3d-hint" hidden>손가락으로 돌려 보세요</p>
        <h3>No.${String(sp.no).padStart(3, '0')} ${sp.name}</h3>
        <p class="sp-tags">${rar} ${kind.label} · ${sp.type}</p>
        <p>${sp.desc}</p>
@@ -410,6 +419,16 @@ function showSpecies(id) {
        <p class="hint">힌트: ${habitatText(sp)}</p>
        <p class="muted">잡는 방법: ${kind.how}</p>`;
   $('sp-sheet').hidden = false;
+  const box = $('sp-3d');
+  if (box) {
+    createViewer(box, sp).then(v => {
+      if (!v) return;
+      if ($('sp-sheet').hidden || $('sp-3d') !== box) { v.dispose(); return; }
+      box.querySelector('svg')?.remove();
+      $('sp-3d-hint').hidden = false;
+      viewer = v;
+    });
+  }
 }
 
 // ---------- 친구 ----------
@@ -465,6 +484,7 @@ function bindFamily(players) {
     btn.addEventListener('click', () => {
       const p = players.find(x => x.uid === btn.dataset.uid);
       if (!p) return;
+      closeViewer();
       $('sp-body').innerHTML = `<h3>${esc(p.name || '이름 없음')}의 도감</h3>
         <p class="muted">${Object.keys(p.caught || {}).length}/${SPECIES.length}종 발견</p>
         <div class="dex-grid small">${dexGrid(p.caught || {}, false)}</div>`;
@@ -583,7 +603,12 @@ async function main() {
     map.setView([CONFIG.home.lat, CONFIG.home.lng], CONFIG.home.zoom);
   });
   for (const id of ['sp-sheet', 'coord-sheet']) {
-    $(id).addEventListener('click', (e) => { if (e.target.id === id || e.target.closest('.sheet-close')) $(id).hidden = true; });
+    $(id).addEventListener('click', (e) => {
+      if (e.target.id === id || e.target.closest('.sheet-close')) {
+        $(id).hidden = true;
+        if (id === 'sp-sheet') closeViewer();
+      }
+    });
   }
   $('coord-copy').addEventListener('click', async () => {
     try { await navigator.clipboard.writeText($('coord-text').textContent); toast('좌표를 복사했어요.'); }
@@ -595,6 +620,8 @@ async function main() {
   setInterval(() => { renderHud(); refreshWorld(); }, 15000);
 
   showTab('map');
+  // 3D 엔진은 미리 받아 둠 (잡기 화면을 빨리 열기 위해)
+  setTimeout(() => { loadThree(); }, 1500);
   if (!store.state.name) {
     $('onboard').hidden = false;
   } else {
