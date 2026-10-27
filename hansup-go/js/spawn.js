@@ -52,18 +52,32 @@ function schoolStop() {
   return CONFIG.stops.find(s => s.special);
 }
 
-/** 상황(밤/낮, 학교 주변)에 맞는 출현 후보와 가중치 */
-export function candidates({ night, nearSchool }) {
+/** 이 지점이 속한 특별 구역 종류 ('water' | 'park' | null) */
+export function zoneAt(pos) {
+  const z = (CONFIG.zones || []).find(z => distanceM(pos, z) <= z.radius);
+  return z ? z.type : null;
+}
+
+/** 상황(밤/낮, 학교 주변, 연못/공원)에 맞는 출현 후보와 가중치 */
+export function candidates({ night, nearSchool, zone = null }) {
   const list = [];
   for (const sp of SPECIES) {
+    const h = sp.habitat;
     let w = RARITY[sp.rarity].weight;
-    if (sp.habitat === 'legend') continue;
-    if (sp.habitat === 'night' && !night) continue;
-    if (sp.habitat === 'day' && night) continue;
-    if (sp.habitat === 'school') {
+    if (h.includes('legend')) continue;
+    if (h.includes('night') && !night) continue;
+    if (h.includes('day') && night) continue;
+    if (h.includes('school')) {
       if (!nearSchool) continue;
       w *= 3;
     }
+    if (h.includes('water')) {
+      if (zone !== 'water') continue;
+      w *= 6;
+    } else if (zone === 'water') {
+      w *= 0.5;
+    }
+    if (h.includes('park')) w *= zone === 'park' ? 3 : 0.5;
     if (w > 0) list.push([sp, w]);
   }
   return list;
@@ -82,12 +96,16 @@ export function pickWeighted(list, r) {
 /** 특정 칸(cell)의 이번 시간대 몬스터 (없으면 null) */
 export function spawnForCell(cx, cy, slot, date) {
   const rnd = mulberry32(hashString(`hansup:${cx}:${cy}:${slot}`));
-  if (rnd() > CONFIG.spawnChance) return null;
+  // 연못·공원 칸에는 더 자주 나온다
+  const center = { lat: (cy + 0.5) * CONFIG.cellLat, lng: (cx + 0.5) * CONFIG.cellLng };
+  const chance = zoneAt(center) ? Math.max(CONFIG.spawnChance, 0.5) : CONFIG.spawnChance;
+  if (rnd() > chance) return null;
   const lat = (cy + 0.1 + rnd() * 0.8) * CONFIG.cellLat;
   const lng = (cx + 0.1 + rnd() * 0.8) * CONFIG.cellLng;
   const school = schoolStop();
   const nearSchool = school ? distanceM({ lat, lng }, school) < CONFIG.schoolZone : false;
-  const sp = pickWeighted(candidates({ night: isNight(date), nearSchool }), rnd());
+  const zone = zoneAt({ lat, lng });
+  const sp = pickWeighted(candidates({ night: isNight(date), nearSchool, zone }), rnd());
   const [minSize, maxSize] = sp.size;
   return {
     id: `${slot}:${cx}:${cy}`,

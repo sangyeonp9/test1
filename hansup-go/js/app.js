@@ -1,10 +1,11 @@
 // 한숲GO 메인: 지도, 위치 추적, 도감, 친구 탭
 
 import { CONFIG, firebaseEnabled } from './config.js';
-import { SPECIES, RARITY, speciesById, monsterSVG } from './monsters.js';
+import { SPECIES, RARITY, KINDS, speciesById, monsterSVG, josa, habitatText } from './monsters.js';
 import { spawnsAround, distanceM, specialEncounter, isNight } from './spawn.js';
 import { store, remote, levelFromXp, xpForLevel } from './store.js';
 import { startEncounter, initEncounterUI, encounterActive } from './catch.js';
+import { loadThree, createViewer } from './stage3d.js';
 
 const $ = (id) => document.getElementById(id);
 const COLORS = ['#3f8fd2', '#e8532b', '#4f9a3a', '#a45ee5', '#e8a317', '#e86f9b'];
@@ -55,7 +56,9 @@ function renderHud() {
   $('hud-xpbar').style.width = `${Math.round(((s.xp - base) / (next - base)) * 100)}%`;
   $('hud-balls').textContent = s.balls;
   $('hud-dex').textContent = `${store.speciesCount()}/${SPECIES.length}`;
-  $('hud-time').textContent = isNight() ? '밤' : '낮';
+  $('hud-snacks').textContent = s.snacks;
+  $('hud-time').textContent = isNight() ? '🌙' : '☀';
+  $('hud-time').title = isNight() ? '밤: 밤에만 나오는 친구들이 있어요' : '낮';
   $('hud-time').className = 'chip ' + (isNight() ? 'night' : 'day');
 }
 
@@ -111,6 +114,20 @@ function initMap() {
     const txt = `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
     showCoord(txt);
   });
+
+  for (const z of CONFIG.zones || []) {
+    L.circle([z.lat, z.lng], { radius: z.radius, className: `zone-${z.type}`, interactive: false }).addTo(map);
+    L.marker([z.lat, z.lng], {
+      interactive: false,
+      zIndexOffset: -200,
+      icon: L.divIcon({
+        className: 'zone-icon',
+        html: `<div class="zone-label ${z.type}">${z.type === 'water' ? '🎣 낚시터' : '🦋 곤충 많은 곳'}</div>`,
+        iconSize: [110, 24],
+        iconAnchor: [55, -18],
+      }),
+    }).addTo(map);
+  }
 
   for (const stop of CONFIG.stops) {
     const m = L.marker([stop.lat, stop.lng], { icon: stopIcon(stop, stopReady(stop)), zIndexOffset: 500 })
@@ -177,7 +194,7 @@ function renderNearby(list) {
       return `<button class="near-item ${d <= CONFIG.catchRadius ? 'in' : ''}" data-id="${s.id}" type="button">
         ${monsterSVG(sp, { size: 40, silhouette: !known })}<span>${fmtDist(d)}</span></button>`;
     }).join('')
-    : '<p class="near-empty">근처에 몬스터가 없어요. 조금 걸어 보세요!</p>';
+    : '<p class="near-empty">근처에 아무도 없어요. 조금 걸어 보세요!</p>';
   for (const btn of $('nearby').querySelectorAll('.near-item')) {
     btn.addEventListener('click', () => {
       const s = list.find(x => x.id === btn.dataset.id);
@@ -201,7 +218,7 @@ function openEncounter(spawn) {
   startEncounter(spawn, (result, sp) => {
     if (result.caught) {
       const s = speciesById[sp.speciesId];
-      toast(result.isNew ? `새 몬스터 ${s.name} 도감 등록!` : `${s.name} 획득! +${result.gained} XP`);
+      toast(result.isNew ? `새로운 ${KINDS[s.kind].label} ${s.name} 도감 등록!` : `${s.name} +${result.gained} XP`);
       const m = spawnMarkers.get(sp.id);
       if (m) { map.removeLayer(m); spawnMarkers.delete(sp.id); }
     } else if (result.fled) {
@@ -232,7 +249,9 @@ function useStop(stop) {
     return;
   }
   const n = stop.special ? CONFIG.specialStopBalls : CONFIG.stopBalls;
+  const k = stop.special ? CONFIG.specialStopSnacks : CONFIG.stopSnacks;
   store.state.balls += n;
+  store.state.snacks += k;
   store.state.stopCooldowns[stop.id] = Date.now();
   store.state.xp += 50;
   store.save();
@@ -241,10 +260,10 @@ function useStop(stop) {
   if (stop.special && store.state.specialDay !== todayKey()) {
     store.state.specialDay = todayKey();
     store.save();
-    toast(`★ ${stop.name} 특별 거점! 볼 ${n}개 + 특별한 몬스터가 나타났어요!`, 3500);
+    toast(`★ ${stop.name} 특별 거점! 숲볼 ${n}개, 간식 ${k}개 + 특별한 몬스터가 나타났어요!`, 3500);
     setTimeout(() => openEncounter(specialEncounter(store.state.id, todayKey())), 900);
   } else {
-    toast(`${stop.name}에서 볼 ${n}개를 받았어요!`);
+    toast(`${stop.name}에서 숲볼 ${n}개, 간식 ${k}개를 받았어요!`);
   }
 }
 
@@ -330,8 +349,10 @@ function showTab(name) {
 }
 
 // ---------- 도감 ----------
-function dexGrid(caughtMap, onClick) {
-  return SPECIES.map(sp => {
+let dexFilter = 'all';
+
+function dexGrid(caughtMap, onClick, filter = 'all') {
+  return SPECIES.filter(sp => filter === 'all' || sp.kind === filter).map(sp => {
     const c = caughtMap[sp.id];
     const count = typeof c === 'number' ? c : c?.count;
     return `<button class="dex-card ${count ? 'got' : ''}" data-id="${sp.id}" type="button" ${onClick ? '' : 'tabindex="-1"'}>
@@ -344,40 +365,70 @@ function dexGrid(caughtMap, onClick) {
   }).join('');
 }
 
+function kindCount(kind) {
+  const all = SPECIES.filter(sp => kind === 'all' || sp.kind === kind);
+  return { got: all.filter(sp => store.state.caught[sp.id]).length, total: all.length };
+}
+
 function renderDex() {
   const s = store.state;
-  $('dex-summary').textContent = `${store.speciesCount()}종 발견 · 총 ${store.totalCaught()}마리`;
+  $('dex-summary').textContent = `${store.speciesCount()}/${SPECIES.length}종 발견 · 총 ${store.totalCaught()}마리`;
   $('dex-progress').style.width = `${(store.speciesCount() / SPECIES.length) * 100}%`;
-  $('dex-grid').innerHTML = dexGrid(s.caught, true);
+  const tabs = [['all', '전체'], ...Object.entries(KINDS).map(([k, v]) => [k, v.label])];
+  $('dex-tabs').innerHTML = tabs.map(([k, label]) => {
+    const c = kindCount(k);
+    return `<button type="button" role="tab" class="dex-tab ${dexFilter === k ? 'on' : ''}" data-k="${k}" aria-selected="${dexFilter === k}">
+      ${label} <small>${c.got}/${c.total}</small></button>`;
+  }).join('');
+  for (const t of $('dex-tabs').querySelectorAll('.dex-tab')) {
+    t.addEventListener('click', () => { dexFilter = t.dataset.k; renderDex(); });
+  }
+  $('dex-grid').innerHTML = dexGrid(s.caught, true, dexFilter);
   for (const btn of $('dex-grid').querySelectorAll('.dex-card')) {
     btn.addEventListener('click', () => showSpecies(btn.dataset.id));
   }
 }
 
-function habitatText(sp) {
-  return {
-    any: '한숲시티 어디서나', day: '낮에만 (06~19시)', night: '밤에만 (19~06시)',
-    school: '남곡초등학교 주변', legend: '남곡초 특별 거점 (아주 드묾)',
-  }[sp.habitat];
+let viewer = null;
+function closeViewer() {
+  viewer?.dispose();
+  viewer = null;
 }
 
 function showSpecies(id) {
+  closeViewer();
   const sp = speciesById[id];
   const c = store.state.caught[id];
+  const kind = KINDS[sp.kind];
+  const rar = `<span style="--rarity:${RARITY[sp.rarity].color}" class="dex-rar">${RARITY[sp.rarity].label}</span>`;
   $('sp-body').innerHTML = c
-    ? `${monsterSVG(sp, { size: 160 })}
+    ? `<div id="sp-3d" class="sp-3d">${monsterSVG(sp, { size: 160 })}</div>
+       <p id="sp-3d-hint" class="sp-3d-hint" hidden>손가락으로 돌려 보세요</p>
        <h3>No.${String(sp.no).padStart(3, '0')} ${sp.name}</h3>
-       <p class="sp-tags"><span style="--rarity:${RARITY[sp.rarity].color}" class="dex-rar">${RARITY[sp.rarity].label}</span> ${sp.type} 타입</p>
+       <p class="sp-tags">${rar} ${kind.label} · ${sp.type}</p>
        <p>${sp.desc}</p>
-       <dl class="sp-facts"><div><dt>잡은 수</dt><dd>${c.count}마리</dd></div>
+       <dl class="sp-facts"><div><dt>${sp.kind === 'animal' ? '만난 횟수' : '잡은 수'}</dt><dd>${c.count}번</dd></div>
        <div><dt>가장 큰 크기</dt><dd>${c.bestSize}cm</dd></div>
        <div><dt>사는 곳</dt><dd>${habitatText(sp)}</dd></div>
-       <div><dt>처음 잡은 날</dt><dd>${new Date(c.firstAt).toLocaleDateString('ko-KR')}</dd></div></dl>`
+       <div><dt>잡는 방법</dt><dd>${kind.how}</dd></div>
+       <div><dt>처음 만난 날</dt><dd>${new Date(c.firstAt).toLocaleDateString('ko-KR')}</dd></div></dl>`
     : `${monsterSVG(sp, { size: 160, silhouette: true })}
        <h3>No.${String(sp.no).padStart(3, '0')} ???</h3>
-       <p>아직 만나지 못한 몬스터예요.</p>
-       <p class="hint">힌트: ${habitatText(sp)}에서 만날 수 있어요.</p>`;
+       <p class="sp-tags">${rar} ${kind.label}</p>
+       <p>아직 만나지 못했어요.</p>
+       <p class="hint">힌트: ${habitatText(sp)}</p>
+       <p class="muted">잡는 방법: ${kind.how}</p>`;
   $('sp-sheet').hidden = false;
+  const box = $('sp-3d');
+  if (box) {
+    createViewer(box, sp).then(v => {
+      if (!v) return;
+      if ($('sp-sheet').hidden || $('sp-3d') !== box) { v.dispose(); return; }
+      box.querySelector('svg')?.remove();
+      $('sp-3d-hint').hidden = false;
+      viewer = v;
+    });
+  }
 }
 
 // ---------- 친구 ----------
@@ -409,10 +460,10 @@ function renderFamily() {
     if (!sp) return '';
     const when = new Date(f.at).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     return `<li><span class="mini-av" style="background:${esc(f.color || '#888')}">${esc((f.name || '?').slice(0, 1))}</span>
-      <span><b>${esc(f.name)}</b>님이 ${sp.name}을(를) 잡았어요${f.isNew ? ' <em>NEW</em>' : ''}</span><time>${when}</time></li>`;
+      <span><b>${esc(f.name)}</b>님이 ${sp.kind === 'animal' ? josa(sp.name, '과', '와') : josa(sp.name, '을', '를')} ${KINDS[sp.kind].feed}${f.isNew ? ' <em>NEW</em>' : ''}</span><time>${when}</time></li>`;
   }).join('');
   box.innerHTML = `<p class="group-code">친구 코드 <b>${esc(s.group)}</b> · ${players.length}명 참여 중</p>
-    ${players.length ? familyList(players, remote.uid) : '<p class="muted">아직 기록이 없어요. 몬스터를 잡으면 여기에 나타나요.</p>'}
+    ${players.length ? familyList(players, remote.uid) : '<p class="muted">아직 기록이 없어요. 도감 친구를 만나면 여기에 나타나요.</p>'}
     <h3 class="sub">최근 소식</h3>
     <ul class="feed">${feed || '<li class="muted">아직 소식이 없어요.</li>'}</ul>`;
   bindFamily(players);
@@ -433,6 +484,7 @@ function bindFamily(players) {
     btn.addEventListener('click', () => {
       const p = players.find(x => x.uid === btn.dataset.uid);
       if (!p) return;
+      closeViewer();
       $('sp-body').innerHTML = `<h3>${esc(p.name || '이름 없음')}의 도감</h3>
         <p class="muted">${Object.keys(p.caught || {}).length}/${SPECIES.length}종 발견</p>
         <div class="dex-grid small">${dexGrid(p.caught || {}, false)}</div>`;
@@ -551,7 +603,12 @@ async function main() {
     map.setView([CONFIG.home.lat, CONFIG.home.lng], CONFIG.home.zoom);
   });
   for (const id of ['sp-sheet', 'coord-sheet']) {
-    $(id).addEventListener('click', (e) => { if (e.target.id === id || e.target.closest('.sheet-close')) $(id).hidden = true; });
+    $(id).addEventListener('click', (e) => {
+      if (e.target.id === id || e.target.closest('.sheet-close')) {
+        $(id).hidden = true;
+        if (id === 'sp-sheet') closeViewer();
+      }
+    });
   }
   $('coord-copy').addEventListener('click', async () => {
     try { await navigator.clipboard.writeText($('coord-text').textContent); toast('좌표를 복사했어요.'); }
@@ -563,6 +620,8 @@ async function main() {
   setInterval(() => { renderHud(); refreshWorld(); }, 15000);
 
   showTab('map');
+  // 3D 엔진은 미리 받아 둠 (잡기 화면을 빨리 열기 위해)
+  setTimeout(() => { loadThree(); }, 1500);
   if (!store.state.name) {
     $('onboard').hidden = false;
   } else {

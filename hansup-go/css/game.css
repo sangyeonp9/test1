@@ -385,3 +385,120 @@ body.in-encounter .toast { bottom: calc(140px + var(--safe-b)); }
 @media (prefers-reduced-motion: reduce) {
   .spawn, .enc-monster svg, .me-dot span { animation: none; }
 }
+
+/* ---------- 도감 종류 탭 ---------- */
+.dex-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+.dex-tab {
+  flex: none; border: 2px solid var(--line); background: var(--card); border-radius: 999px;
+  padding: 6px 12px; font-family: var(--display); font-size: 15px; color: var(--muted);
+}
+.dex-tab small { font-family: var(--body); font-size: 12px; font-variant-numeric: tabular-nums; }
+.dex-tab.on { background: var(--forest); border-color: var(--forest); color: #fff; }
+
+/* ---------- 지도: 연못·공원 구역 ---------- */
+.zone-water { fill: #4fb3e8; fill-opacity: .14; stroke: #2f8fc9; stroke-opacity: .5; stroke-width: 2; stroke-dasharray: 4 6; }
+.zone-park { fill: #8fd16a; fill-opacity: .12; stroke: #4f9a3a; stroke-opacity: .45; stroke-width: 2; stroke-dasharray: 4 6; }
+.zone-icon { background: none; border: none; }
+.zone-label {
+  display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; white-space: nowrap;
+  background: rgba(255,255,255,.9); color: var(--forest-d); box-shadow: 0 1px 4px rgba(0,0,0,.15);
+}
+.zone-label.water { color: #1f6a99; }
+
+/* ---------- 잡기 화면: 공통 상태 ---------- */
+.hud-stats .chip { padding: 4px 8px; }
+.enc-count:empty { display: none; }
+.enc-monster.happy svg { animation: happy .5s ease-in-out 3; }
+.enc-monster.leave { transition: transform .9s ease-in, opacity .9s; transform: translate(-50%, -50%) translateX(140%) scale(.6); opacity: 0; }
+.enc-monster.hop svg { animation: hop .45s ease-out; }
+.enc-monster.startle svg { animation: startle .4s linear; }
+.enc-monster.netted { transition: transform .4s ease-in; transform: translate(-50%, -50%) scale(.55); }
+.enc-monster.netted::after {
+  content: ""; position: absolute; inset: 10%; border-radius: 50%;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,.75) 0 2px, transparent 2px 12px),
+              repeating-linear-gradient(-45deg, rgba(255,255,255,.75) 0 2px, transparent 2px 12px);
+  border: 4px solid #8a5428;
+}
+@keyframes happy { 0%, 100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-18px) rotate(-6deg); } 60% { transform: translateY(0) rotate(6deg); } }
+@keyframes hop { 0% { transform: translateY(0); } 40% { transform: translateY(-26px); } 100% { transform: translateY(0); } }
+@keyframes startle { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
+/* 곤충: 날아다니는 작은 크기 + 잠자리채 */
+.mode-net .enc-monster { width: 150px; height: 150px; }
+.mode-net .enc-monster.flying svg { animation: flutter .25s ease-in-out infinite alternate; }
+@keyframes flutter { from { transform: rotate(-4deg) scale(1); } to { transform: rotate(4deg) scale(1.03); } }
+.net-fx {
+  position: absolute; width: 130px; height: 130px; border-radius: 50%; pointer-events: none; z-index: 5;
+  transform: translate(-50%, -50%) scale(.3); opacity: 0;
+  border: 5px solid #8a5428;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,.55) 0 2px, transparent 2px 12px),
+              repeating-linear-gradient(-45deg, rgba(255,255,255,.55) 0 2px, transparent 2px 12px);
+}
+.net-fx.swing { animation: swing .45s ease-out; }
+@keyframes swing { 0% { transform: translate(-50%, -50%) scale(.3) rotate(-40deg); opacity: 1; } 60% { transform: translate(-50%, -50%) scale(1) rotate(0); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.05); opacity: 0; } }
+.mode-net .enc-stage { cursor: crosshair; }
+
+/* 동물: 간식 타이밍 */
+.snack-ui {
+  position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(24px + var(--safe-b));
+  width: min(360px, calc(100% - 32px)); display: flex; flex-direction: column; gap: 10px; align-items: stretch; z-index: 4;
+  background: rgba(255,255,255,.92); border-radius: 20px; padding: 12px 14px; box-shadow: 0 6px 18px rgba(0,0,0,.18);
+}
+.hearts { display: flex; justify-content: center; gap: 8px; font-size: 28px; line-height: 1; color: #d9d3d0; }
+.hearts .on { color: #ff5d7a; animation: hop .4s ease-out; }
+.track { position: relative; height: 26px; border-radius: 13px; background: #e7ece8; overflow: hidden; }
+.track-zone { position: absolute; top: 0; bottom: 0; background: #8fd16a; border-left: 2px solid #4f9a3a; border-right: 2px solid #4f9a3a; }
+.track-marker { position: absolute; top: -2px; bottom: -2px; width: 6px; margin-left: -3px; border-radius: 3px; background: var(--ink); }
+.snack-ui .btn.primary { margin-top: 0; }
+
+/* 물고기: 낚시 */
+.mode-fish { background: #4aa3d8; }
+.mode-fish .enc-bg {
+  display: block !important;
+  background:
+    radial-gradient(ellipse 60% 10% at 30% 30%, rgba(255,255,255,.25), transparent 70%),
+    radial-gradient(ellipse 50% 8% at 70% 55%, rgba(255,255,255,.2), transparent 70%),
+    linear-gradient(180deg, #bfe6ff 0%, #8fd0f2 22%, #4aa3d8 23%, #2f7fb5 100%);
+}
+.mode-fish .enc-monster { left: 42%; width: 180px; height: 180px; }
+.mode-fish .enc-monster svg { animation: swim 2.4s ease-in-out infinite; }
+@keyframes swim { 0%, 100% { transform: translate(-8px, 0) rotate(-3deg); } 50% { transform: translate(8px, 6px) rotate(3deg); } }
+.fish-ui { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+.fish-meter {
+  position: absolute; right: max(18px, env(safe-area-inset-right)); top: 22%; height: 46%; width: 54px;
+  border-radius: 14px; background: rgba(15, 55, 85, .55); border: 3px solid rgba(255,255,255,.85); overflow: hidden;
+}
+.fish-zone { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(143, 209, 106, .55); border-top: 3px solid #8fd16a; border-bottom: 3px solid #8fd16a; }
+.fish-zone.in { background: rgba(255, 210, 63, .6); border-color: #ffd23f; }
+.fish-dot { position: absolute; left: 50%; width: 34px; height: 34px; transform: translateX(-50%); }
+.fish-prog {
+  position: absolute; right: calc(max(18px, env(safe-area-inset-right)) + 62px); top: 22%; height: 46%; width: 12px;
+  border-radius: 6px; background: rgba(255,255,255,.35); overflow: hidden; display: flex; align-items: flex-end;
+}
+.fish-prog span { display: block; width: 100%; background: #ffd23f; height: 30%; }
+.fish-btn {
+  position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(28px + var(--safe-b));
+  width: min(320px, calc(100% - 32px)); pointer-events: auto; padding: 18px; font-size: 19px;
+  touch-action: none; user-select: none; -webkit-user-select: none;
+}
+.mode-fish .enc-msg { top: calc(var(--safe-t) + 78px); left: 16px; transform: none; max-width: calc(100% - 32px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .enc-monster.flying svg, .mode-fish .enc-monster svg, .enc-monster.happy svg { animation: none; }
+}
+.fish-btn:active { transform: translateX(-50%) translateY(3px); }
+
+/* ---------- 3D 캐릭터 ---------- */
+.enc-3d { position: absolute; inset: 0; pointer-events: none; }
+.enc-3d .stage3d-canvas { width: 100%; height: 100%; display: block; }
+.enc-xr {
+  position: absolute; z-index: 3; right: max(12px, env(safe-area-inset-right));
+  top: calc(var(--safe-t) + 62px); background: var(--sun); color: #3b2f00;
+}
+.encounter.xr-on { background: transparent; }
+.encounter.xr-on .enc-bg, .encounter.xr-on video { display: none; }
+.sp-3d { width: 220px; height: 220px; max-width: 100%; touch-action: pan-y; cursor: grab; position: relative; }
+.sp-3d .stage3d-canvas { width: 100%; height: 100%; display: block; }
+.sp-3d-hint { font-size: 12px; color: var(--muted); margin-top: -4px; }
+.encounter.is3d .enc-msg { top: calc(var(--safe-t) + 116px); }
+.encounter.is3d .enc-xr { right: auto; left: max(12px, env(safe-area-inset-left)); }

@@ -22,6 +22,13 @@ export const CONFIG = {
     { id: 'danji6', name: '한숲시티 6단지', lat: 37.15458, lng: 127.17407 },
   ],
 
+  // 특별 구역: 물고기·오리·개구리는 연못에서만, 곤충은 공원에 많이 나옵니다.
+  zones: [
+    { id: 'pond', name: '한숲물빛공원', type: 'water', lat: 37.15470, lng: 127.16979, radius: 90 },
+    { id: 'sannae', name: '한숲산내음공원', type: 'park', lat: 37.15822, lng: 127.17086, radius: 110 },
+    { id: 'haetbit', name: '한숲햇빛공원', type: 'park', lat: 37.15619, lng: 127.17497, radius: 100 },
+  ],
+
   // 거리 규칙 (미터)
   visibleRadius: 250,   // 이 거리 안의 몬스터가 지도에 보임
   catchRadius: 45,      // 이 거리 안에 들어가야 잡을 수 있음
@@ -40,6 +47,10 @@ export const CONFIG = {
   startBalls: 20,
   stopBalls: 5,
   specialStopBalls: 10,
+  startSnacks: 15,      // 동물과 친구가 될 때 쓰는 간식
+  stopSnacks: 3,
+  specialStopSnacks: 5,
+  netSwings: 5,         // 곤충 한 마리에 잠자리채를 휘두를 수 있는 횟수
   stopCooldownMinutes: 5,
 
   // 친구 공유 도감 (Firebase)

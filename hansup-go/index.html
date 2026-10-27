@@ -26,8 +26,9 @@
     </div>
     <div class="hud-stats">
       <span class="chip" title="가진 숲볼"><span class="ball-ico" aria-hidden="true"></span><b id="hud-balls">0</b></span>
-      <span class="chip" title="도감"><b id="hud-dex">0/12</b></span>
-      <span id="hud-time" class="chip day">낮</span>
+      <span class="chip" title="가진 간식"><span aria-hidden="true">🍪</span><b id="hud-snacks">0</b></span>
+      <span class="chip" title="도감"><b id="hud-dex">0/36</b></span>
+      <span id="hud-time" class="chip day" title="낮">☀</span>
     </div>
   </header>
 
@@ -42,7 +43,7 @@
         <button id="btn-center" class="round-btn" type="button" title="내 위치로" aria-label="내 위치로" hidden>◎</button>
       </div>
       <div class="nearby-wrap">
-        <div class="nearby-title">근처 몬스터</div>
+        <div class="nearby-title">근처에 있어요</div>
         <div id="nearby" class="nearby"></div>
       </div>
     </section>
@@ -53,6 +54,7 @@
         <h2>내 도감</h2>
         <p id="dex-summary" class="muted"></p>
         <div class="progress"><span id="dex-progress"></span></div>
+        <div id="dex-tabs" class="dex-tabs" role="tablist" aria-label="도감 종류"></div>
         <div id="dex-grid" class="dex-grid"></div>
       </div>
     </section>
@@ -110,16 +112,29 @@
     <video id="cam" playsinline muted></video>
     <div class="enc-bg" aria-hidden="true"></div>
     <div class="enc-top">
-      <button id="enc-run" class="enc-btn" type="button">← 도망가기</button>
+      <button id="enc-run" class="enc-btn" type="button">← 돌아가기</button>
       <div class="enc-title"><b id="enc-name"></b><span id="enc-meta" class="enc-meta"></span></div>
       <button id="enc-ar" class="enc-btn" type="button" aria-pressed="false">AR 켜기</button>
     </div>
+    <button id="enc-xr" class="enc-btn enc-xr" type="button" hidden>🪄 진짜 AR</button>
     <div id="enc-stage" class="enc-stage">
+      <div id="enc-3d" class="enc-3d" hidden></div>
       <div id="enc-monster" class="enc-monster"></div>
       <div id="enc-ring" class="enc-ring"></div>
       <p id="enc-msg" class="enc-msg" role="status"></p>
       <div id="enc-ball" class="pball" role="button" aria-label="숲볼 (위로 밀어 던지기)"></div>
-      <div class="enc-count"><span class="ball-ico" aria-hidden="true"></span> <b id="enc-balls">0</b></div>
+      <div id="net-fx" class="net-fx" aria-hidden="true" hidden></div>
+      <div id="snack-ui" class="snack-ui" hidden>
+        <div id="snack-hearts" class="hearts" aria-label="친해진 정도"></div>
+        <div class="track"><div id="snack-zone" class="track-zone"></div><div id="snack-marker" class="track-marker"></div></div>
+        <button id="snack-btn" class="btn primary" type="button">간식 주기</button>
+      </div>
+      <div id="fish-ui" class="fish-ui" hidden>
+        <div class="fish-meter"><div id="fish-zone" class="fish-zone"></div><div id="fish-dot" class="fish-dot"></div></div>
+        <div class="fish-prog" aria-label="낚시 진행도"><span id="fish-prog"></span></div>
+        <button id="fish-btn" class="btn primary fish-btn" type="button">꾹 눌러서 당기기</button>
+      </div>
+      <div id="enc-count" class="enc-count"></div>
     </div>
   </section>
 
@@ -128,7 +143,7 @@
     <form id="onboard-form" class="modal-card">
       <div class="ob-hero" aria-hidden="true"></div>
       <h1>한숲GO</h1>
-      <p class="ob-lead">한숲시티와 남곡초 주변을 걸으며 귀여운 몬스터를 모아 보세요!</p>
+      <p class="ob-lead">한숲시티와 남곡초 주변을 걸으며 몬스터, 곤충, 동물, 물고기를 모아 보세요!</p>
       <label for="ob-name">닉네임</label>
       <input id="ob-name" maxlength="12" placeholder="예: 숲탐험대장" autocomplete="nickname" required />
       <label for="ob-group">친구 코드 <small>(선택)</small></label>
