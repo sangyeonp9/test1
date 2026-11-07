@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Car Viewer | 자동차 3D 뷰어</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Barlow:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&display=swap" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div class="app">
+    <main id="viewport" aria-label="3D 뷰포트. 드래그해서 회전, 휠로 확대·축소합니다.">
+      <div class="badge" id="modelBadge">불러오는 중…</div>
+      <div class="hint">드래그: 회전 · 우클릭 드래그: 이동 · 휠/핀치: 확대·축소</div>
+      <div class="loading" id="loading" hidden>
+        <div class="bar"><span id="loadingBar"></span></div>
+        <div id="loadingText">모델 불러오는 중…</div>
+      </div>
+      <div class="drop" id="dropOverlay" hidden>
+        <div>.glb / .gltf 파일을 여기에 놓으세요</div>
+      </div>
+    </main>
+
+    <aside class="panel">
+      <header>
+        <h1>Car <span>Viewer</span></h1>
+        <p class="sub">.glb 모델을 불러와 실제 크기로 맞추고, 도장 색을 바꿔 봅니다.</p>
+      </header>
+
+      <section>
+        <h2>모델</h2>
+        <div class="row">
+          <label class="btn primary" for="fileInput">파일 열기</label>
+          <input id="fileInput" type="file" accept=".glb,.gltf,.bin,image/*" multiple hidden />
+          <button class="btn" id="protoBtn" type="button">프로토타입</button>
+        </div>
+        <form class="row" id="urlForm">
+          <input id="urlInput" type="text" placeholder="models/palisade-lx2.glb 또는 https://…" aria-label="모델 URL" />
+          <button class="btn" type="submit">불러오기</button>
+        </form>
+        <p class="tip">파일을 화면에 끌어다 놓아도 됩니다. .gltf는 .bin과 텍스처 파일을 함께 선택하세요.</p>
+        <dl class="stats" id="stats"></dl>
+      </section>
+
+      <section>
+        <h2>크기 · 방향</h2>
+        <div class="row">
+          <label class="check"><input type="checkbox" id="fitToggle" checked /> 실제 길이로 맞춤</label>
+          <span class="num"><input id="lenInput" type="number" min="0.5" max="30" step="0.01" value="5.06" aria-label="전장(m)" /> m</span>
+        </div>
+        <div class="row">
+          <button class="btn" type="button" id="rotL">↺ 90°</button>
+          <button class="btn" type="button" id="rotR">↻ 90°</button>
+          <button class="btn" type="button" id="flip">앞뒤 바꾸기</button>
+        </div>
+        <p class="tip">정면 버튼을 눌렀을 때 차 앞이 보이도록 방향을 맞추세요.</p>
+      </section>
+
+      <section>
+        <h2>도장</h2>
+        <select id="matSelect" aria-label="도장 재질"></select>
+        <div class="swatches" id="swatches"></div>
+        <div class="row">
+          <label class="check">직접 선택 <input type="color" id="colorInput" value="#6d7379" /></label>
+          <button class="btn" type="button" id="restoreBtn">원래 재질</button>
+        </div>
+        <p class="tip">차체 재질은 이름과 면적으로 자동 추정합니다. 틀리면 목록에서 바꾸세요. 선택하면 해당 부위가 잠깐 빛납니다.</p>
+      </section>
+
+      <section>
+        <h2>보기</h2>
+        <div class="row" id="views">
+          <button class="btn" type="button" data-view="34">3/4</button>
+          <button class="btn" type="button" data-view="front">정면</button>
+          <button class="btn" type="button" data-view="side">측면</button>
+          <button class="btn" type="button" data-view="rear">후면</button>
+          <button class="btn" type="button" data-view="top">위</button>
+        </div>
+        <div class="row">
+          <label class="check"><input type="checkbox" id="autoRotate" checked /> 자동 회전</label>
+          <button class="btn" type="button" id="animBtn" hidden>애니메이션 재생</button>
+        </div>
+        <label class="slider">노출 <input type="range" id="exposure" min="0.4" max="2" step="0.01" value="1" /></label>
+        <label class="slider">반사광 <input type="range" id="envInt" min="0" max="2.5" step="0.01" value="1" /></label>
+        <div class="row">
+          <button class="btn" type="button" id="shotBtn">PNG로 저장</button>
+        </div>
+      </section>
+    </aside>
+  </div>
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
