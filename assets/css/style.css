@@ -111,6 +111,22 @@ a:hover { text-decoration: underline; }
 .tab-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
 .tab-btn.active { background: var(--bg-hover); color: var(--text-primary); font-weight: 600; }
 
+/* Link to other pages on the site, set apart from the tabs */
+.nav-link {
+  color: var(--accent-blue);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  margin-left: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+.nav-link:hover { background: var(--bg-hover); border-color: var(--accent-blue); }
+.nav-link:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+
 /* Market Status */
 .market-status {
   display: flex;
