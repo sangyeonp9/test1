@@ -154,7 +154,7 @@ function guessPaint(entries) {
   return byArea >= 0 ? byArea : 0;
 }
 
-function setModel(root, name, clips = []) {
+function setModel(root, name, clips = [], opts = {}) {
   if (current) {
     if (current.mixer) current.mixer.stopAllAction();
     scene.remove(current.holder);
@@ -166,7 +166,7 @@ function setModel(root, name, clips = []) {
   scene.add(holder);
 
   const { entries, tris, meshes } = collectMaterials(root);
-  current = { root, holder, name, yaw: 0, entries, tris, meshes, paintIdx: guessPaint(entries), mixer: null, actions: [] };
+  current = { root, holder, name, yaw: 0, entries, tris, meshes, paintIdx: guessPaint(entries), mixer: null, actions: [], trueScale: !!opts.trueScale };
 
   // 긴 방향을 X축(앞뒤)으로 맞춤
   const s0 = new THREE.Box3().setFromObject(root).getSize(new THREE.Vector3());
@@ -196,7 +196,8 @@ function normalize(refit) {
   const center = box.getCenter(new THREE.Vector3());
   let s = 1;
   const len = parseFloat($('#lenInput').value);
-  if ($('#fitToggle').checked && len > 0) s = len / Math.max(size.x, size.z, 1e-6);
+  // 코드로 만든 모형은 이미 실제 치수(미터)라서 크기를 바꾸지 않는다
+  if (!current.trueScale && $('#fitToggle').checked && len > 0) s = len / Math.max(size.x, size.z, 1e-6);
   holder.scale.setScalar(s);
   holder.position.set(-center.x * s, -box.min.y * s, -center.z * s);
   current.size = size.multiplyScalar(s);
@@ -261,14 +262,34 @@ function goView(name) {
 function renderStats() {
   const s = current.size;
   const mm = (v) => Math.round(v * 1000).toLocaleString('ko-KR') + ' mm';
+  // 사이드미러를 뺀 차체 폭을 따로 잰다 (공개 제원의 전폭은 미러 제외)
+  let bodyWidth = Math.min(s.x, s.z), mirrors = 0;
+  const body = new THREE.Box3(), part = new THREE.Box3();
+  current.holder.updateMatrixWorld(true);
+  (function walk(o) {
+    if (o.name === 'Mirror') { mirrors++; return; }
+    if (o.isMesh) body.union(part.setFromObject(o, true));
+    o.children.forEach(walk);
+  })(current.root);
+  if (mirrors) { const b = body.getSize(new THREE.Vector3()); bodyWidth = Math.min(b.x, b.z); }
+  const spec = current.root.userData.spec;
+  const cmp = (v, ref) => (spec ? `${mm(v)} (제원 ${mm(ref)})` : mm(v));
   const rows = [
-    ['전장', mm(Math.max(s.x, s.z))],
-    ['전폭', mm(Math.min(s.x, s.z)) + ' (미러 포함)'],
-    ['전고', mm(s.y)],
+    ['전장', cmp(Math.max(s.x, s.z), spec && spec.length)],
+    ['전폭', mirrors ? cmp(bodyWidth, spec && spec.width) : mm(bodyWidth)],
+    ['미러 포함', mm(Math.min(s.x, s.z))],
+    ['전고', cmp(s.y, spec && spec.height)],
+  ];
+  if (spec) {
+    const ax = current.root.userData.axles;
+    rows.push(['축거', cmp(ax.front - ax.rear, spec.wheelbase)]);
+  }
+  rows.push(
     ['메시', current.meshes.toLocaleString('ko-KR') + '개'],
     ['삼각형', current.tris.toLocaleString('ko-KR') + '개'],
     ['재질', current.entries.length + '종'],
-  ];
+  );
+  if (!mirrors) rows.splice(2, 1);
   const dl = $('#stats');
   dl.replaceChildren(...rows.flatMap(([k, v]) => {
     const dt = document.createElement('dt'); dt.textContent = k;
@@ -416,11 +437,11 @@ function loadFiles(fileList) {
 }
 
 function showPrototype() {
-  setModel(buildPrototypeCar(), 'Palisade LX2 프로토타입', []);
+  setModel(buildPrototypeCar(), 'Palisade LX2 근사 모형', [], { trueScale: true });
 }
 
 $('#fileInput').addEventListener('change', (e) => { if (e.target.files.length) loadFiles(e.target.files); e.target.value = ''; });
-$('#protoBtn').addEventListener('click', () => { $('#lenInput').value = '5.06'; showPrototype(); });
+$('#protoBtn').addEventListener('click', showPrototype);
 $('#urlForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const u = $('#urlInput').value.trim();
