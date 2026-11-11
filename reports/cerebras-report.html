@@ -1,0 +1,580 @@
+<title>세레브라스 투자 리포트</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: research-note column (max 1040px) with a sticky section bar; two parts — company analysis, then the Buffett lens. */
+:root{
+  --bg:#F5F7FA; --surface:#FFFFFF; --ink:#14213A; --muted:#5B6878; --line:#DCE2EA;
+  --accent:#B8682A; --accent-soft:#F6E9DD; --navy:#1F3A5F; --navy-soft:#E6ECF4;
+  --good:#2D7D55; --warn:#B7791F; --bad:#B83A3A; --gray:#9AA5B1;
+  --font-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1521; --surface:#172032; --ink:#E7ECF3; --muted:#9AA7B8; --line:#2A3650;
+  --accent:#E39A5C; --accent-soft:#3A2A1E; --navy:#8FB3E0; --navy-soft:#1E2B42;
+  --good:#5BC08A; --warn:#E0B054; --bad:#E27272; --gray:#6E7B8C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1521; --surface:#172032; --ink:#E7ECF3; --muted:#9AA7B8; --line:#2A3650;
+  --accent:#E39A5C; --accent-soft:#3A2A1E; --navy:#8FB3E0; --navy-soft:#1E2B42;
+  --good:#5BC08A; --warn:#E0B054; --bad:#E27272; --gray:#6E7B8C; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:1040px;margin:0 auto}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h2{font-size:1.6rem;font-weight:700;color:var(--ink)}
+h3{font-size:1.12rem;font-weight:600;color:var(--navy);margin-top:8px}
+p{margin:0}
+.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+a{color:var(--navy)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1fr 220px;gap:32px;align-items:center;padding-block:48px 32px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.hero h1{font-size:clamp(2rem,5vw,3rem);font-weight:700;margin-top:6px}
+.hero .ticker{font-family:var(--font-mono);color:var(--muted);font-size:1rem;margin-top:4px}
+.hero .lede{margin-top:16px;max-width:62ch;color:var(--ink)}
+.meta{margin-top:14px;font-size:.85rem;color:var(--muted)}
+.wafer-fig{text-align:center;font-size:.75rem;color:var(--muted)}
+.wafer-fig svg{width:100%;max-width:220px;height:auto}
+
+/* Nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-bottom:8px}
+.nav .wrap{display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+.nav a{flex:none;text-decoration:none;font-size:.86rem;color:var(--muted);padding:6px 12px;border-radius:999px;border:1px solid transparent;white-space:nowrap}
+.nav a:hover{color:var(--ink);border-color:var(--line)}
+.nav .part{font-size:.72rem;letter-spacing:.1em;color:var(--accent);font-weight:600;align-self:center;padding:0 4px 0 10px;flex:none}
+
+/* Sections */
+section{padding-block:40px 8px;scroll-margin-top:64px;display:flex;flex-direction:column;gap:16px}
+.sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--accent);padding-bottom:8px}
+.sec-head .idx{font-family:var(--font-mono);color:var(--accent);font-size:.95rem}
+.part-banner{margin-top:48px;padding:28px 24px;border-radius:14px;background:var(--navy-soft);display:flex;flex-direction:column;gap:6px}
+.part-banner .eyebrow{color:var(--accent)}
+.part-banner h2{font-size:1.9rem}
+.prose{max-width:72ch;display:flex;flex-direction:column;gap:10px}
+p.prose{display:block}
+ul.list{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+ul.list li::marker{color:var(--accent)}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:2px}
+.kpi .v{font-family:var(--font-mono);font-size:1.55rem;font-weight:600;color:var(--navy)}
+.kpi .l{font-size:.82rem;color:var(--muted)}
+.kpi.alert .v{color:var(--bad)}
+
+/* Callout */
+.callout{background:var(--accent-soft);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.callout.cool{background:var(--navy-soft)}
+.callout strong.t{color:var(--navy);font-size:1.02rem}
+.verdict{font-size:1.08rem;font-weight:500}
+
+/* Tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:560px}
+th{background:var(--navy-soft);color:var(--ink);text-align:left;font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.k{font-weight:600;white-space:nowrap}
+.src{font-size:.78rem;color:var(--muted)}
+
+/* Chips */
+.chip{display:inline-block;font-size:.76rem;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.chip.bad{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.chip.warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.chip.good{background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good)}
+.chip.neutral{background:var(--navy-soft);color:var(--navy)}
+
+/* Grids */
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.two > *{min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.panel h4{margin:0;font-size:.95rem}
+.swot .panel h4{display:flex;align-items:center;gap:8px}
+.swot .tag{font-family:var(--font-mono);font-weight:600;width:24px;height:24px;border-radius:6px;display:inline-grid;place-items:center;color:var(--surface);font-size:.8rem}
+
+/* Charts */
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.chart .ct{font-weight:600;font-size:.95rem}
+.chart svg{width:100%;height:auto;display:block}
+.chart svg text{fill:var(--muted);font-family:var(--font-mono);font-size:11px}
+.chart svg .lbl{fill:var(--ink);font-family:var(--font-body);font-size:12px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+
+blockquote{margin:0;border-left:3px solid var(--accent);padding:4px 0 4px 16px;font-style:italic;color:var(--ink);max-width:72ch}
+blockquote cite{display:block;font-style:normal;font-size:.8rem;color:var(--muted);margin-top:4px}
+
+ol.sources{margin:0;padding-left:1.4em;font-size:.84rem;display:flex;flex-direction:column;gap:4px;overflow-wrap:anywhere}
+footer{padding-block:40px 56px;color:var(--muted);font-size:.8rem;border-top:1px solid var(--line);margin-top:48px}
+
+@media (max-width:760px){
+  .hero{grid-template-columns:1fr}
+  .wafer-fig{display:none}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .two{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+html{scroll-behavior:smooth}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <div class="eyebrow">기업 분석 · 가치투자 관점</div>
+      <h1>세레브라스 시스템즈</h1>
+      <div class="ticker">Cerebras Systems Inc. · NASDAQ: CBRS</div>
+      <p class="lede">웨이퍼 한 장 전체를 하나의 칩으로 만든 AI 반도체 기업입니다. 이 리포트는 기업 현황과 5년 실적 전망을 정리하고, 같은 자료를 워렌 버핏의 투자 원칙에 대조해 경제적 해자가 있는지 검증합니다.</p>
+      <p class="meta">기준일 2026년 11월 11일 · 3분기 실적(11월 12일 발표 예정) 미반영 · 투자 권유 아님</p>
+    </div>
+    <figure class="wafer-fig" aria-label="웨이퍼 스케일 칩 개념도">
+      <svg id="wafer" viewBox="0 0 220 220"></svg>
+      <figcaption>일반 GPU는 웨이퍼에서 수십 개 칩을 잘라내지만, 세레브라스는 웨이퍼 중앙의 거대한 정사각형 하나를 통째로 씁니다.</figcaption>
+    </figure>
+  </header>
+</div>
+
+<nav class="nav" aria-label="섹션 이동">
+  <div class="wrap">
+    <span class="part">PART A</span>
+    <a href="#summary">핵심 요약</a><a href="#overview">기업 개요</a><a href="#tech">기술</a><a href="#biz">고객·계약</a><a href="#fin">재무</a><a href="#comp">경쟁</a><a href="#swot">SWOT</a><a href="#risk">리스크</a><a href="#forecast">5년 전망</a><a href="#stock">주가</a>
+    <span class="part">PART B</span>
+    <a href="#buffett">버핏 결론</a><a href="#moat">해자 검증</a><a href="#checklist">체크리스트</a><a href="#value">내재가치</a><a href="#final">최종 판단</a>
+    <a href="#sources">출처</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ================= PART A ================= -->
+<section id="summary">
+  <div class="sec-head"><h2>핵심 요약</h2></div>
+  <div class="kpis">
+    <div class="kpi"><span class="v">$510M</span><span class="l">2025 매출 (+76% YoY)</span></div>
+    <div class="kpi"><span class="v">$880–890M</span><span class="l">2026 Core 매출 가이던스</span></div>
+    <div class="kpi"><span class="v">$25.4B</span><span class="l">수주잔고 (RPO, 2Q26)</span></div>
+    <div class="kpi alert"><span class="v">≈$95</span><span class="l">현재 주가 (공모가 $185)</span></div>
+  </div>
+  <div class="callout">
+    <strong class="t">한눈에 보는 결론</strong>
+    <ul class="list">
+      <li><b>사업:</b> 초대형 AI 칩(WSE-3), 이를 담은 시스템(CS-3), 그리고 이 칩으로 돌리는 초고속 AI 추론 클라우드를 판매합니다.</li>
+      <li><b>강점:</b> 답변 생성 속도가 업계 최상위권입니다. OpenAI($200억 이상 다년 계약)와 AWS를 고객으로 확보해 수주잔고가 2025년 매출의 약 50배입니다.</li>
+      <li><b>약점:</b> 2025년 매출의 86%가 UAE 기업 두 곳에서 나왔고, 앞으로는 OpenAI 의존도가 커집니다. 회계 기준 적자가 크고(2Q26 순손실 $4.5억) 마진은 하락 추세입니다.</li>
+      <li><b>주가:</b> 공모가 $185, 상장일 종가 $311에서 마진 우려와 공매도 리포트로 11월 초 $78~82까지 떨어졌고, 지금은 $95 안팎입니다.</li>
+      <li><b>버핏 관점:</b> 기술 우위는 분명하지만 경제적 해자는 아직 입증되지 않았습니다. 현재 가격에 안전마진이 없어 관망 대상입니다.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="overview">
+  <div class="sec-head"><span class="idx">01</span><h2>기업 개요</h2></div>
+  <div class="tbl"><table>
+    <tr><th>항목</th><th>내용</th></tr>
+    <tr><td class="k">설립 · 본사</td><td>2015년 · 미국 캘리포니아주 서니베일</td></tr>
+    <tr><td class="k">경영진</td><td>Andrew Feldman(CEO) 외 공동창업자 4인. 서버 기업 SeaMicro(2012년 AMD에 매각) 창업 멤버 출신</td></tr>
+    <tr><td class="k">상장</td><td>2026년 5월 14일 나스닥, 공모가 $185, 공모 규모 약 $55.5억. 청약 경쟁률 20배 이상(Bloomberg)</td></tr>
+    <tr><td class="k">사업 영역</td><td>AI 시스템 하드웨어 판매 · AI 추론/학습 클라우드 · 국가 단위 '소버린 AI' 인프라 구축</td></tr>
+    <tr><td class="k">주요 고객</td><td>OpenAI, AWS, G42·MBZUAI(UAE), Meta, Mistral, Perplexity, 미국 국립연구소 등</td></tr>
+  </table></div>
+  <h3>주요 연혁</h3>
+  <div class="tbl"><table>
+    <tr><th>시기</th><th>이벤트</th></tr>
+    <tr><td class="k num">2019</td><td>세계 최대 칩 WSE-1 공개</td></tr>
+    <tr><td class="k num">2024.03</td><td>WSE-3 / CS-3 출시 (트랜지스터 4조 개)</td></tr>
+    <tr><td class="k num">2024.09</td><td>1차 IPO 신청. G42 지분투자 관련 미국 외국인투자위원회(CFIUS) 심사로 지연</td></tr>
+    <tr><td class="k num">2025.09</td><td>Series G $11억 (기업가치 $81억), 기존 IPO 신청 철회</td></tr>
+    <tr><td class="k num">2026.01</td><td>OpenAI와 750MW 다년 컴퓨트 계약</td></tr>
+    <tr><td class="k num">2026.02</td><td>Series H $10억 (기업가치 약 $230억, Tiger Global 주도, AMD 참여)</td></tr>
+    <tr><td class="k num">2026.03</td><td>AWS 협력 발표: Amazon Bedrock에서 Trainium과 CS-3를 결합한 추론 서비스</td></tr>
+    <tr><td class="k num">2026.05</td><td>나스닥 상장, 상장일 종가 $311 (시가총액 약 $660억)</td></tr>
+    <tr><td class="k num">2026.10–11</td><td>공매도 업체 Culper Research가 칩 수명 문제 제기 → 주가 사상 최저, 회사 반박</td></tr>
+  </table></div>
+</section>
+
+<section id="tech">
+  <div class="sec-head"><span class="idx">02</span><h2>기술과 제품</h2></div>
+  <div class="prose"><p>일반 GPU는 300mm 웨이퍼 한 장에서 수십 개의 칩을 잘라 만듭니다. 세레브라스는 <b>웨이퍼 한 장 전체를 하나의 칩</b>으로 쓰고, 그 안에 대용량 SRAM 메모리를 넣었습니다. AI가 답변을 한 글자씩 만들어 내는 속도는 메모리에서 데이터를 읽는 속도가 좌우하는데, 이 구조 덕분에 그 속도가 매우 빠릅니다.</p></div>
+  <div class="tbl"><table>
+    <tr><th>WSE-3 사양</th><th>수치</th><th>비고</th></tr>
+    <tr><td class="k">트랜지스터</td><td class="num">4조 개</td><td>세계 최대 단일 프로세서</td></tr>
+    <tr><td class="k">AI 코어</td><td class="num">900,000개</td><td></td></tr>
+    <tr><td class="k">온칩 메모리</td><td class="num">44GB SRAM</td><td>GPU는 칩 바깥의 HBM 메모리 사용</td></tr>
+    <tr><td class="k">메모리 대역폭</td><td class="num">21 PB/s</td><td>회사는 H100 대비 약 7,000배라고 주장</td></tr>
+    <tr><td class="k">연산 성능</td><td class="num">125 PFLOPS</td><td>이론상 H100 약 62개 상당 (Tom's Hardware)</td></tr>
+    <tr><td class="k">칩 면적</td><td class="num">46,225 mm²</td><td>21.5cm × 21.5cm, TSMC 5nm급 공정</td></tr>
+  </table></div>
+  <div class="two">
+    <div class="panel"><h4>강한 점</h4><ul class="list">
+      <li>AI 에이전트·코딩 도우미·추론 모델처럼 출력이 길고 빠른 응답이 중요한 작업에 최적</li>
+      <li>AWS 결합 모델: 입력 처리는 Trainium, 출력 생성은 CS-3가 나눠 맡음</li>
+    </ul></div>
+    <div class="panel"><h4>한계</h4><ul class="list">
+      <li>칩당 44GB로는 초대형 모델을 다 담지 못해 여러 대에 나눠야 하고, 그만큼 비용이 늘어남</li>
+      <li>웨이퍼 전체를 쓰는 구조라 수율·발열·열팽창 관리가 어려움 (공매도 리포트의 공격 지점)</li>
+      <li>NVIDIA CUDA 대비 작은 개발자 생태계</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="biz">
+  <div class="sec-head"><span class="idx">03</span><h2>사업 모델과 고객·계약</h2></div>
+  <div class="two">
+    <div class="chart"><div class="ct">2025년 매출 고객 집중도</div><svg id="c-donut" viewBox="0 0 320 200" role="img" aria-label="MBZUAI 62%, G42 24%, 기타 14%"></svg>
+      <div class="legend"><span><i style="background:var(--navy)"></i>MBZUAI 62%</span><span><i style="background:var(--accent)"></i>G42 24%</span><span><i style="background:var(--gray)"></i>기타 14%</span></div>
+      <p class="src">출처: Cerebras S-1 (2026.04)</p></div>
+    <div class="panel"><h4>매출 구성 (2025)</h4>
+      <div class="tbl" style="border:0"><table style="min-width:0">
+        <tr><th>사업</th><th class="r">매출</th><th class="r">비중</th></tr>
+        <tr><td>하드웨어 판매</td><td class="r">$358M</td><td class="r">70%</td></tr>
+        <tr><td>클라우드·서비스</td><td class="r">$152M</td><td class="r">30%</td></tr>
+        <tr><td><b>합계</b></td><td class="r"><b>$510M</b></td><td class="r">100%</td></tr>
+      </table></div>
+      <p>2026년에는 일회성 하드웨어 판매에서 반복 매출인 클라우드로 무게가 옮겨가고 있습니다. 2Q26에는 클라우드가 매출의 약 70%였습니다.</p>
+    </div>
+  </div>
+  <h3>OpenAI 계약: 핵심 성장 동력</h3>
+  <div class="tbl"><table>
+    <tr><th>항목</th><th>내용</th></tr>
+    <tr><td class="k">규모</td><td>2026년 1월 $100억 이상으로 보도 → 4월 S-1에서 $200억 이상으로 확대 공시</td></tr>
+    <tr><td class="k">용량</td><td>기본 750MW (2028년까지 나눠 공급) + 추가 1.25GW 옵션 (2030년까지)</td></tr>
+    <tr><td class="k">대출</td><td>OpenAI가 $10억 운전자본 대출 제공 (연 6%, 2032년 만기, 컴퓨트로 상환 가능)</td></tr>
+    <tr><td class="k">워런트</td><td>OpenAI에 최대 3,340만 주 무의결권 주식 워런트 부여. 마일스톤을 모두 달성하면 약 10% 지분</td></tr>
+  </table></div>
+  <p class="src">워런트 비용은 매출에서 차감되므로, 회사는 이를 제외한 'Core 매출'을 함께 발표합니다. 출처: TechCrunch, DatacenterDynamics, MarketBeat, S-1 분석 보도</p>
+</section>
+
+<section id="fin">
+  <div class="sec-head"><span class="idx">04</span><h2>재무 현황</h2></div>
+  <div class="tbl"><table>
+    <tr><th>(백만 달러)</th><th class="r">1Q26</th><th class="r">2Q26</th><th class="r">3Q26 가이던스</th></tr>
+    <tr><td class="k">GAAP 매출</td><td class="r">193.4 (+94%)</td><td class="r">180.1 (+74%)</td><td class="r">–</td></tr>
+    <tr><td class="k">Core 매출</td><td class="r">191.3 (+92%)</td><td class="r">209.9 (+103%)</td><td class="r">214–216</td></tr>
+    <tr><td class="k">클라우드 매출</td><td class="r">82.8 (+178%)</td><td class="r">126.0 (+281%)</td><td class="r">–</td></tr>
+    <tr><td class="k">하드웨어 매출</td><td class="r">110.6 (+59%)</td><td class="r">54.1 (−23%)</td><td class="r">–</td></tr>
+    <tr><td class="k">매출총이익률</td><td class="r">Core 47%</td><td class="r">Core 41% · GAAP 14%</td><td class="r">Core 38–40%</td></tr>
+    <tr><td class="k">GAAP 순이익</td><td class="r">−14.0</td><td class="r">−450.5</td><td class="r">–</td></tr>
+    <tr><td class="k">Core 순이익</td><td class="r">–</td><td class="r">−6.9</td><td class="r">Core 영업이익률 −25~−23%</td></tr>
+  </table></div>
+  <p class="src">2Q26 GAAP 순손실에는 주식보상비용 $386.6M이 포함됩니다. 연간: 2023 $78.7M → 2024 $290.3M → 2025 $510M. 출처: SEC 8-K, CNBC, Barchart, Converge Digest</p>
+  <div class="chart"><div class="ct">2026년 분기별 Core 매출 ($M)</div><svg id="c-quarter" viewBox="0 0 640 240" role="img" aria-label="1분기 191, 2분기 210, 3분기 가이던스 215, 4분기 암시치 269"></svg>
+    <p class="src">4Q는 연간 가이던스 중간값($885M)에서 1~3분기를 뺀 암시치입니다.</p></div>
+  <div class="callout">
+    <strong class="t">해석 포인트</strong>
+    <ul class="list">
+      <li><b>매출은 빠르게 늘고 있습니다.</b> Core 매출이 전년 대비 약 2배이고, 클라우드는 3~4배 성장했습니다.</li>
+      <li><b>회계 수치는 왜곡이 큽니다.</b> 워런트 상각과 상장 관련 주식보상비용 때문에 GAAP 적자가 크게 나타납니다.</li>
+      <li><b>마진은 떨어지고 있습니다.</b> 새 데이터센터 가동 초기비용으로 47% → 41% → 38~40%가 되었고, 1Q·2Q 실적 발표 뒤 주가가 각각 약 12%, 14% 하락했습니다.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="comp">
+  <div class="sec-head"><span class="idx">05</span><h2>경쟁 환경</h2></div>
+  <div class="tbl"><table>
+    <tr><th>경쟁사</th><th>주력</th><th>세레브라스 대비</th></tr>
+    <tr><td class="k">NVIDIA</td><td>Blackwell·Rubin GPU, Groq 기술 라이선스</td><td>범용성·생태계에서 압도적. 2025년 12월 Groq 추론 기술 라이선스(약 $200억 보도)로 저지연 추론에도 직접 진입 <span class="chip bad">최대 위협</span></td></tr>
+    <tr><td class="k">Google</td><td>TPU</td><td>규모와 가격 대비 성능 우위, 외부 판매 확대</td></tr>
+    <tr><td class="k">AWS</td><td>Trainium · Inferentia</td><td>경쟁자이면서 파트너 (Bedrock에서 CS-3와 결합)</td></tr>
+    <tr><td class="k">AMD</td><td>MI350 · MI400</td><td>GPU 2위, 세레브라스 Series H 투자자</td></tr>
+    <tr><td class="k">SambaNova</td><td>SN40L</td><td>추론 특화 스타트업, 규모는 세레브라스가 앞섬</td></tr>
+    <tr><td class="k">빅테크 자체 칩</td><td>OpenAI·Meta·MS 자체 설계</td><td>장기적으로 고객이 이탈할 수 있는 요인</td></tr>
+  </table></div>
+</section>
+
+<section id="swot">
+  <div class="sec-head"><span class="idx">06</span><h2>SWOT과 장단점</h2></div>
+  <div class="two swot">
+    <div class="panel"><h4><span class="tag" style="background:var(--good)">S</span>강점</h4><ul class="list">
+      <li>업계 최고 수준의 추론 속도</li><li>OpenAI·AWS·Meta 등 최상위 고객</li><li>수주잔고 $254억으로 매출 가시성 높음</li><li>10년 가까이 쌓은 웨이퍼 스케일 제조 노하우</li></ul></div>
+    <div class="panel"><h4><span class="tag" style="background:var(--bad)">W</span>약점</h4><ul class="list">
+      <li>극단적 고객 집중 (UAE → OpenAI)</li><li>GAAP 적자, 마진 하락 추세</li><li>대형 모델 서빙 시 비용 증가</li><li>TSMC 단일 파운드리 의존</li></ul></div>
+    <div class="panel"><h4><span class="tag" style="background:var(--navy)">O</span>기회</h4><ul class="list">
+      <li>AI 에이전트·추론 모델 확산으로 빠른 추론 수요 급증</li><li>OpenAI 추가 1.25GW 옵션</li><li>AWS Bedrock을 통한 기업 고객 확대 (2027년~)</li><li>유럽·중동·남미의 소버린 AI 수요</li></ul></div>
+    <div class="panel"><h4><span class="tag" style="background:var(--warn)">T</span>위협</h4><ul class="list">
+      <li>NVIDIA·Google의 저지연 추론 시장 진입</li><li>빅테크의 자체 칩 내재화</li><li>칩 수명 논란과 감가상각 이슈</li><li>데이터센터 전력·부지 확보 경쟁, 중동 고객 관련 규제</li></ul></div>
+  </div>
+</section>
+
+<section id="risk">
+  <div class="sec-head"><span class="idx">07</span><h2>주요 리스크</h2></div>
+  <div class="tbl"><table>
+    <tr><th>리스크</th><th>내용</th><th>영향</th></tr>
+    <tr><td class="k">고객 집중</td><td>2025년 매출 86%가 UAE 관계사 2곳. 계약이 끝나면 OpenAI가 $10억 대출의 즉시 상환을 요구할 수 있음</td><td><span class="chip bad">매우 높음</span></td></tr>
+    <tr><td class="k">칩 수명 논란</td><td>Culper는 실사용 수명이 1.4~2.5년이라고 주장. 회사는 퇴역 웨이퍼 비율 0.5% 미만이라며 반박. 독립 검증은 아직 없음</td><td><span class="chip bad">높음</span></td></tr>
+    <tr><td class="k">인프라 실행</td><td>2028년까지 750MW 이상의 데이터센터를 확보·가동해야 함</td><td><span class="chip bad">높음</span></td></tr>
+    <tr><td class="k">마진 압박</td><td>Core 매출총이익률 47% → 38~40%</td><td><span class="chip warn">중간~높음</span></td></tr>
+    <tr><td class="k">경쟁 심화</td><td>NVIDIA-Groq, Google TPU</td><td><span class="chip warn">중간~높음</span></td></tr>
+    <tr><td class="k">지정학·규제</td><td>UAE 고객 관련 수출통제·CFIUS 이슈</td><td><span class="chip warn">중간</span></td></tr>
+  </table></div>
+</section>
+
+<section id="forecast">
+  <div class="sec-head"><span class="idx">08</span><h2>향후 5년 실적 전망</h2></div>
+  <div class="chart"><div class="ct">연간 매출 실적과 시나리오별 전망 ($B)</div>
+    <svg id="c-rev" viewBox="0 0 680 320" role="img" aria-label="기본 시나리오 매출 2026 0.9, 2027 2.9, 2028 4.6, 2029 6.0, 2030 7.3, 2031 8.5 십억 달러"></svg>
+    <div class="legend"><span><i style="background:var(--navy)"></i>실적</span><span><i style="background:var(--good)"></i>낙관</span><span><i style="background:var(--accent)"></i>기본</span><span><i style="background:var(--bad)"></i>비관</span></div>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>시나리오 ($B)</th><th class="r">2026E</th><th class="r">2027E</th><th class="r">2028E</th><th class="r">2029E</th><th class="r">2030E</th><th class="r">2031E</th><th class="r">연평균 성장</th></tr>
+    <tr><td class="k">낙관</td><td class="r">0.89</td><td class="r">3.3</td><td class="r">6.8</td><td class="r">9.5</td><td class="r">12.0</td><td class="r">14.0</td><td class="r">약 73%</td></tr>
+    <tr><td class="k">기본</td><td class="r">0.89</td><td class="r">2.9</td><td class="r">4.6</td><td class="r">6.0</td><td class="r">7.3</td><td class="r">8.5</td><td class="r">약 57%</td></tr>
+    <tr><td class="k">비관</td><td class="r">0.89</td><td class="r">1.8</td><td class="r">2.8</td><td class="r">3.6</td><td class="r">4.3</td><td class="r">5.0</td><td class="r">약 41%</td></tr>
+  </table></div>
+  <p class="src">2026E는 회사 가이던스 중간값. 2027E 이후는 컨센서스(2027E 약 $29.5억), Rosenblatt(2028E $68억), Motley Fool(2027E $18억+)을 참고한 자체 추정치입니다.</p>
+  <div class="two">
+    <div class="panel"><h4>기본 시나리오의 가정</h4><p>2027년에 회사 목표(매출 3배)를 컨센서스 수준에서 달성합니다. 2028년 OpenAI 계약이 정점을 지난 뒤 신규 고객으로 연 15~30% 성장하고, Core 영업이익률은 2028년 전후 흑자로 돌아서 2031년 약 17%에 이릅니다.</p></div>
+    <div class="panel"><h4>판단</h4><p>2027~2028년 성장은 이미 계약으로 확보되어 있지만, 속도는 데이터센터 가동 속도에 달려 있습니다. 2029년 이후 성장은 OpenAI 외 고객을 얼마나 늘리느냐에 달려 있습니다.</p></div>
+  </div>
+</section>
+
+<section id="stock">
+  <div class="sec-head"><span class="idx">09</span><h2>주가와 애널리스트 의견</h2></div>
+  <div class="chart"><div class="ct">CBRS 주가 주요 지점 (USD)</div><svg id="c-stock" viewBox="0 0 640 240" role="img" aria-label="공모가 185, 상장일 종가 311, 52주 최고 386, 52주 최저 78, 현재 약 95"></svg></div>
+  <div class="tbl"><table>
+    <tr><th>증권사</th><th>의견</th><th class="r">목표주가</th></tr>
+    <tr><td class="k">Morgan Stanley</td><td>비중확대</td><td class="r">$178 (← $279)</td></tr>
+    <tr><td class="k">UBS</td><td>매수</td><td class="r">$250 (← $330)</td></tr>
+    <tr><td class="k">커버리지 개시 9개사</td><td>전원 매수 계열</td><td class="r">$250–340</td></tr>
+    <tr><td class="k">컨센서스 평균</td><td>강력 매수~매수</td><td class="r">약 $245–275</td></tr>
+  </table></div>
+  <p class="src">목표주가는 대부분 내려갔지만 현재가와 평균 목표가의 차이는 여전히 큽니다. 시장이 칩 수명 논란, 마진 하락, 고객 집중을 애널리스트보다 무겁게 보고 있다는 뜻입니다.</p>
+</section>
+
+<!-- ================= PART B ================= -->
+<div class="part-banner" id="buffett">
+  <span class="eyebrow">Part B · 가치투자 관점</span>
+  <h2>워렌 버핏의 눈으로 본 세레브라스</h2>
+  <p>같은 자료를 버핏의 투자 원칙에 대조합니다. 핵심 질문은 하나입니다. 이 회사에 10년 이상 이익을 지켜줄 해자가 있는가.</p>
+</div>
+
+<section>
+  <div class="kpis">
+    <div class="kpi alert"><span class="v">없음~좁음</span><span class="l">경제적 해자 판정</span></div>
+    <div class="kpi alert"><span class="v">9 / 40</span><span class="l">버핏 체크리스트 점수</span></div>
+    <div class="kpi alert"><span class="v">없음</span><span class="l">현재 가격의 안전마진</span></div>
+    <div class="kpi"><span class="v">관망</span><span class="l">버핏식 판단</span></div>
+  </div>
+  <div class="callout cool"><p class="verdict">세레브라스는 <b>기술적 우위는 분명하지만 경제적 해자는 아직 입증되지 않은 기업</b>입니다. 버핏 기준으로는 "훌륭한 기술을 가진 평범한 사업"에 가깝고, 현재 가격에는 안전마진이 없습니다.</p></div>
+  <h3>버핏의 8가지 원칙</h3>
+  <div class="tbl"><table>
+    <tr><th>원칙</th><th>버핏의 요지</th><th>세레브라스</th></tr>
+    <tr><td class="k">원금 보존</td><td>"규칙 1: 절대 돈을 잃지 마라. 규칙 2: 규칙 1을 잊지 마라."</td><td><span class="chip bad">하방 위험 큼</span></td></tr>
+    <tr><td class="k">능력 범위</td><td>이해할 수 있는 사업에만 투자</td><td><span class="chip bad">범위 밖</span></td></tr>
+    <tr><td class="k">경제적 해자</td><td>산업의 성장성이 아니라 경쟁 우위의 지속성을 판단</td><td><span class="chip bad">미입증</span></td></tr>
+    <tr><td class="k">가격 결정력</td><td>사업 평가에서 가장 중요한 단 하나의 요소</td><td><span class="chip bad">약함</span></td></tr>
+    <tr><td class="k">예측 가능한 이익</td><td>꾸준한 이익, 높은 ROE, 적은 설비투자</td><td><span class="chip bad">적자·자본집약</span></td></tr>
+    <tr><td class="k">경영진</td><td>성실성·지능·에너지</td><td><span class="chip warn">보통</span></td></tr>
+    <tr><td class="k">안전마진</td><td>"가격은 지불하는 것, 가치는 얻는 것"</td><td><span class="chip bad">없음</span></td></tr>
+    <tr><td class="k">장기 보유</td><td>훌륭한 기업을 적정 가격에 사서 오래 보유</td><td><span class="chip warn">아직 증명 전</span></td></tr>
+  </table></div>
+  <blockquote>투자의 핵심은 어떤 산업이 사회에 얼마나 영향을 미칠지, 얼마나 성장할지를 평가하는 것이 아니라, 특정 기업의 경쟁 우위와 무엇보다 그 우위의 지속성을 판단하는 것이다.<cite>워렌 버핏, Fortune (1999)</cite></blockquote>
+  <p class="prose">버핏은 같은 글에서 자동차와 항공 산업을 예로 들었습니다. 둘 다 세상을 바꿨지만 투자자 대부분은 돈을 벌지 못했습니다. "AI가 세상을 바꾼다"와 "세레브라스 주주가 돈을 번다"는 서로 다른 문제입니다.</p>
+</section>
+
+<section id="moat">
+  <div class="sec-head"><span class="idx">B1</span><h2>해자 검증</h2></div>
+  <div class="chart"><div class="ct">해자 원천별 점수 (0 = 없음, 5 = 매우 강함)</div>
+    <svg id="c-moat" viewBox="0 0 680 300" role="img" aria-label="세레브라스 대 NVIDIA 해자 점수 비교"></svg>
+    <div class="legend"><span><i style="background:var(--accent)"></i>세레브라스</span><span><i style="background:var(--gray)"></i>NVIDIA (비교 기준)</span></div>
+    <p class="src">공개 자료에 근거한 본 리포트의 정성 평가</p>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>해자 원천</th><th class="r">점수</th><th>근거</th></tr>
+    <tr><td class="k">특허·노하우</td><td class="r">2.5</td><td>웨이퍼 크기 칩을 10년 가까이 상용화한 유일한 기업. 하지만 특허는 다른 방식으로 빠른 추론을 하는 경쟁(Groq식 칩, 차세대 GPU)을 막지 못합니다.</td></tr>
+    <tr><td class="k">전환비용</td><td class="r">1.0</td><td>업계 표준(OpenAI 호환) API로 제공해 고객이 코드 몇 줄만 바꾸면 다른 업체로 옮길 수 있습니다. OpenAI도 여러 공급사를 함께 씁니다.</td></tr>
+    <tr><td class="k">네트워크 효과</td><td class="r">0.0</td><td>사용자가 늘수록 가치가 커지는 구조가 아닙니다. CUDA 같은 개발자 생태계가 없습니다.</td></tr>
+    <tr><td class="k">원가 우위</td><td class="r">0.5</td><td>강점은 속도이지 원가가 아닙니다. TSMC에 의존하고 구매 규모도 NVIDIA보다 훨씬 작습니다.</td></tr>
+    <tr><td class="k">효율적 규모</td><td class="r">1.0</td><td>빠른 추론 시장이 크고 빠르게 커져서 거대 기업이 들어올 이유가 충분합니다.</td></tr>
+    <tr><td class="k">가격 결정력</td><td class="r">1.0</td><td><b>최대 고객이 공급자의 지분을 받아갔습니다.</b> OpenAI는 거의 무상의 워런트(최대 약 10%)와 대출 조건을 확보했습니다. 가격 결정력이 공급자에게 있다면 나오기 어려운 구조입니다.</td></tr>
+  </table></div>
+  <div class="two">
+    <div class="panel"><h4>해자가 없다고 보는 이유</h4><p>반도체 역사에서 '가장 빠른 칩'의 자리는 2~3년마다 바뀌었습니다. 오래 살아남은 기업은 칩 성능이 아니라 생태계(인텔 x86, NVIDIA CUDA)나 규모의 원가 우위(TSMC)로 해자를 만들었습니다.</p></div>
+    <div class="panel"><h4>해자를 만들 가능성</h4><ul class="list">
+      <li>세대가 거듭될수록 커질 수 있는 제조 노하우 격차</li>
+      <li>전력·데이터센터 용량을 먼저 확보한 효과</li>
+      <li>OpenAI·AWS와의 관계가 실질적 전환비용으로 진화할 가능성</li>
+    </ul><p class="src">모두 가능성입니다. 버핏은 이미 입증된 지속성에 돈을 겁니다.</p></div>
+  </div>
+</section>
+
+<section id="checklist">
+  <div class="sec-head"><span class="idx">B2</span><h2>버핏 체크리스트</h2></div>
+  <div class="chart"><div class="ct">항목별 점수 (각 5점 만점, 합계 9 / 40)</div><svg id="c-check" viewBox="0 0 680 300" role="img" aria-label="버핏 체크리스트 항목별 점수"></svg></div>
+  <p class="prose">버핏이 선호해 온 기업(코카콜라, 애플, 아메리칸 익스프레스, 무디스 등)은 대체로 이 체크리스트에서 30점 이상을 받습니다. 세레브라스의 결정적인 감점 요인은 <b>이익 이력(0점)</b>, <b>설비투자 부담(0점)</b>, <b>해자(1점)</b>입니다.</p>
+</section>
+
+<section id="value">
+  <div class="sec-head"><span class="idx">B3</span><h2>내재가치와 안전마진</h2></div>
+  <p class="prose">버핏은 기업 가치를 앞으로 벌어들일 현금의 현재가치로 봅니다. 2031년 이익을 추정하고 연 10%로 5년 할인해 예시 계산을 했습니다.</p>
+  <div class="tbl"><table>
+    <tr><th></th><th class="r">비관</th><th class="r">기본</th><th class="r">낙관</th></tr>
+    <tr><td class="k">2031E 매출</td><td class="r">$5.0B</td><td class="r">$8.5B</td><td class="r">$14.0B</td></tr>
+    <tr><td class="k">영업이익률 (가정)</td><td class="r">8%</td><td class="r">17%</td><td class="r">22%</td></tr>
+    <tr><td class="k">순이익 (세율 20%)</td><td class="r">$0.32B</td><td class="r">$1.16B</td><td class="r">$2.46B</td></tr>
+    <tr><td class="k">적용 PER</td><td class="r">15배</td><td class="r">20배</td><td class="r">20배</td></tr>
+    <tr><td class="k">현재가치</td><td class="r"><b>$3.0B</b></td><td class="r"><b>$14.4B</b></td><td class="r"><b>$30.6B</b></td></tr>
+    <tr><td class="k">확률</td><td class="r">25%</td><td class="r">50%</td><td class="r">25%</td></tr>
+  </table></div>
+  <div class="chart"><div class="ct">내재가치 추정과 현재 시가총액 ($B)</div><svg id="c-value" viewBox="0 0 680 260" role="img" aria-label="확률가중 내재가치 15.6, 현재 시가총액 약 20, 30% 안전마진 매수가 10.9 십억 달러"></svg>
+    <p class="src">시가총액은 상장일 시총과 주가로 역산한 추정치입니다. 가정이 조금만 바뀌어도 결과가 크게 달라지는 예시 계산입니다.</p></div>
+  <div class="callout">
+    <strong class="t">버핏식 해석</strong>
+    <ul class="list">
+      <li><b>안전마진이 없습니다.</b> 확률가중 내재가치 약 $156억(워런트 희석 반영 시 약 $140억)이 시가총액 약 $200억보다 낮습니다. 30% 안전마진을 두면 시가총액 약 $109억, 주당 $50 안팎이 매수 가능 가격입니다.</li>
+      <li><b>결과의 폭이 너무 넓습니다.</b> 비관과 낙관이 10배 차이입니다. 버핏은 추정 범위가 이렇게 넓은 기업을 피합니다.</li>
+      <li><b>잃을 위험이 더 큽니다.</b> 비관 시나리오에서 약 −85%, 낙관 시나리오에서 약 +50%입니다.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="final">
+  <div class="sec-head"><span class="idx">B4</span><h2>최종 판단과 다시 볼 조건</h2></div>
+  <div class="tbl"><table>
+    <tr><th>관점</th><th>성장주 투자자 · 월가</th><th>버핏식 가치투자자</th></tr>
+    <tr><td class="k">OpenAI 계약</td><td>매출 가시성을 높이는 대형 호재</td><td>고객 집중 심화, 공급자 협상력이 약하다는 증거</td></tr>
+    <tr><td class="k">주가 −49%</td><td>매수 기회 (평균 목표가 약 $245)</td><td>과열이 식었을 뿐 아직 내재가치보다 비쌈</td></tr>
+    <tr><td class="k">기술 우위</td><td>수배~수십 배 빠른 추론이 곧 해자</td><td>기술 우위는 일시적, 해자는 구조적이어야 함</td></tr>
+    <tr><td class="k">결론</td><td>고위험·고수익 성장주로 매수</td><td>'너무 어려움(Too Hard)' 바구니로 분류</td></tr>
+  </table></div>
+  <div class="two">
+    <div class="panel"><h4>다시 검토할 수 있는 조건</h4><ul class="list">
+      <li>단일 고객 비중 30% 이하로 다변화</li>
+      <li>경쟁 제품 출시 뒤에도 매출총이익률 45% 이상 유지</li>
+      <li>유지 설비투자를 빼고도 3년 연속 플러스 현금흐름</li>
+      <li>칩 수명에 대한 독립 검증 또는 수년간의 실측 데이터</li>
+      <li>위 조건을 갖춘 상태에서 내재가치 대비 30% 이상 할인된 가격</li>
+    </ul></div>
+    <div class="panel"><h4>버핏 원칙을 지키며 AI에 참여하는 방법</h4><ul class="list">
+      <li>버크셔가 2025년 알파벳을 산 것처럼, 이미 큰 현금을 버는 해자 기업을 통해 참여</li>
+      <li>공급망에서 대체하기 어려운 핵심 기업 (지정학 리스크는 별도 고려)</li>
+      <li>성장주를 담는다면 감당할 수 있는 작은 비중으로 제한</li>
+    </ul></div>
+  </div>
+  <blockquote>평범한 기업을 훌륭한 가격에 사는 것보다, 훌륭한 기업을 적정한 가격에 사는 것이 훨씬 낫다.<cite>워렌 버핏, 1989년 주주서한</cite></blockquote>
+  <p class="prose">세레브라스가 훌륭한 기업으로 증명된다면 그때 적정한 가격에 사도 늦지 않다는 것이 버핏식 사고입니다. 증명되지 않는다면, 지금 사지 않은 것이 규칙 1을 지킨 셈이 됩니다.</p>
+</section>
+
+<section id="sources">
+  <div class="sec-head"><h2>출처</h2></div>
+  <ol class="sources">
+    <li><a href="https://www.sec.gov/Archives/edgar/data/2021728/000162828026025762/cerebras-sx1april2026.htm" target="_blank" rel="noopener">SEC — Cerebras S-1 (2026.04)</a></li>
+    <li><a href="https://www.sec.gov/Archives/edgar/data/0002021728/000162828026044941/cbrsannouncesfinancialresu.htm" target="_blank" rel="noopener">SEC — 8-K 1Q26 실적</a></li>
+    <li><a href="https://www.cerebras.ai/press-release/cerebras-systems-announces-pricing-of-initial-public-offering" target="_blank" rel="noopener">Cerebras — IPO 가격 결정</a></li>
+    <li><a href="https://www.bloomberg.com/news/articles/2026-05-13/ai-chipmaker-cerebras-said-poised-to-price-ipo-at-185-per-share" target="_blank" rel="noopener">Bloomberg — IPO 가격 $185</a></li>
+    <li><a href="https://techcrunch.com/2026/01/14/openai-signs-deal-reportedly-worth-10-billion-for-compute-from-cerebras/" target="_blank" rel="noopener">TechCrunch — OpenAI 계약</a></li>
+    <li><a href="https://www.cnbc.com/2026/08/12/cerebras-cbrs-q2-earnings-report-2026.html" target="_blank" rel="noopener">CNBC — 2Q26 실적</a></li>
+    <li><a href="https://www.barchart.com/story/news/3890357/how-to-play-cerebras-stock-here-as-cloud-revenue-surges-287" target="_blank" rel="noopener">Barchart — 2Q26 클라우드 매출</a></li>
+    <li><a href="https://futurumgroup.com/insights/cerebras-s-1-teardown-is-the-23b-wafer-scale-ipo-the-end-of-gpu-homogeneity/" target="_blank" rel="noopener">Futurum Group — S-1 분석</a></li>
+    <li><a href="https://datacenterdynamics.com/en/news/cerebras-chips-have-shorter-lifespans-than-statements-suggest-short-seller-report-claims" target="_blank" rel="noopener">DatacenterDynamics — 공매도 리포트</a></li>
+    <li><a href="https://cerebras.ai/blog/what-it-took-to-build-wafer-scale-and-why-it-lasts" target="_blank" rel="noopener">Cerebras — 칩 수명 반박</a></li>
+    <li><a href="https://stockanalysis.com/stocks/cbrs/forecast/" target="_blank" rel="noopener">StockAnalysis — 애널리스트 전망</a></li>
+    <li><a href="https://www.fool.com/investing/2026/09/26/prediction-cerebras-revenue-will-more-than-double-in-2027/" target="_blank" rel="noopener">Motley Fool — 2027 매출 전망</a></li>
+    <li><a href="https://www.tomshardware.com/tech-industry/artificial-intelligence/cerebras-launches-900000-core-125-petaflops-wafer-scale-processor-for-ai-theoretically-equivalent-to-about-62-nvidia-h100-gpus" target="_blank" rel="noopener">Tom's Hardware — WSE-3 사양</a></li>
+    <li><a href="https://www.berkshirehathaway.com/letters/letters.html" target="_blank" rel="noopener">Berkshire Hathaway 주주서한</a></li>
+    <li><a href="https://www.fool.com.au/2025/11/17/here-are-the-stocks-warren-buffett-just-bought-and-sold" target="_blank" rel="noopener">Motley Fool — 버크셔 알파벳 매수</a></li>
+  </ol>
+</section>
+
+<footer>
+  2027년 이후 수치, 해자 점수, 체크리스트 점수, 내재가치 계산은 공개 자료를 바탕으로 한 자체 추정입니다. 버핏 인용문은 널리 알려진 문장을 한국어로 옮긴 것이며, 버핏 본인이나 버크셔의 의견이 아닙니다. 정보 제공 목적이며 투자 권유가 아닙니다.
+</footer>
+</main>
+
+<script>
+(function(){
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, attrs, parent, text) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; };
+  const C = { navy:"var(--navy)", accent:"var(--accent)", gray:"var(--gray)", good:"var(--good)", bad:"var(--bad)", warn:"var(--warn)", line:"var(--line)", surface:"var(--surface)", ink:"var(--ink)" };
+
+  // Wafer illustration: many small GPU-style dies faded, one big wafer-scale die highlighted
+  (function(){
+    const s = document.getElementById("wafer"); const cx=110, cy=110, r=100;
+    el("circle",{cx,cy,r,fill:C.surface,stroke:C.line,"stroke-width":2},s);
+    const g = el("g",{},s); const step = 16;
+    for (let x=cx-r; x<cx+r; x+=step) for (let y=cy-r; y<cy+r; y+=step) {
+      const corners = [[x,y],[x+step-2,y],[x,y+step-2],[x+step-2,y+step-2]];
+      if (corners.every(([a,b]) => (a-cx)**2+(b-cy)**2 <= (r-3)**2)) el("rect",{x,y,width:step-3,height:step-3,rx:1.5,fill:C.gray,opacity:.25},g);
+    }
+    el("rect",{x:cx-66,y:cy-66,width:132,height:132,rx:4,fill:C.accent,opacity:.85},s);
+    el("text",{x:cx,y:cy-4,"text-anchor":"middle",fill:C.surface,"font-family":"IBM Plex Mono, monospace","font-size":14,"font-weight":600},s,"WSE-3");
+    el("text",{x:cx,y:cy+14,"text-anchor":"middle",fill:C.surface,"font-family":"IBM Plex Mono, monospace","font-size":10},s,"46,225 mm²");
+    el("path",{d:`M${cx-6} ${cy+r-1} h12`,stroke:C.line,"stroke-width":3},s);
+  })();
+
+  function vbars(id, data, opts){
+    const s = document.getElementById(id); const [W,H] = s.getAttribute("viewBox").split(" ").slice(2).map(Number);
+    const m = {l:48,r:16,t:20,b:46}; const iw=W-m.l-m.r, ih=H-m.t-m.b; const max = opts.max;
+    for (let i=0;i<=opts.ticks;i++){ const v=max*i/opts.ticks, y=m.t+ih-ih*v/max;
+      el("line",{x1:m.l,x2:W-m.r,y1:y,y2:y,stroke:C.line,"stroke-width":1},s);
+      el("text",{x:m.l-8,y:y+4,"text-anchor":"end"},s,opts.fmtAxis(v)); }
+    const bw = iw/data.length;
+    data.forEach((d,i)=>{ const h=ih*d.v/max, x=m.l+i*bw+bw*.2, y=m.t+ih-h;
+      el("rect",{x,y,width:bw*.6,height:h,rx:3,fill:d.c},s);
+      el("text",{x:x+bw*.3,y:y-6,"text-anchor":"middle",class:"lbl"},s,opts.fmt(d.v));
+      d.l.split("|").forEach((t,j)=>el("text",{x:x+bw*.3,y:H-m.b+18+j*14,"text-anchor":"middle",class:j?"":"lbl"},s,t)); });
+  }
+  vbars("c-quarter",[
+    {l:"1Q26|실적",v:191.3,c:C.navy},{l:"2Q26|실적",v:209.9,c:C.navy},{l:"3Q26|가이던스",v:215,c:C.accent},{l:"4Q26|암시치",v:268.8,c:C.gray}],
+    {max:300,ticks:3,fmt:v=>"$"+Math.round(v)+"M",fmtAxis:v=>v});
+  vbars("c-stock",[
+    {l:"공모가|5/13",v:185,c:C.gray},{l:"상장일 종가|5/14",v:311,c:C.navy},{l:"52주 최고",v:386.34,c:C.good},{l:"52주 최저|11월 초",v:77.84,c:C.bad},{l:"현재|11/10–11",v:95,c:C.accent}],
+    {max:400,ticks:4,fmt:v=>"$"+Math.round(v),fmtAxis:v=>"$"+v});
+  vbars("c-value",[
+    {l:"비관",v:3.0,c:C.bad},{l:"기본",v:14.4,c:C.accent},{l:"낙관",v:30.6,c:C.good},{l:"확률가중",v:15.6,c:C.navy},{l:"현재 시총|추정",v:20,c:C.gray},{l:"버핏식 매수가|30% 할인",v:10.9,c:C.warn}],
+    {max:35,ticks:7,fmt:v=>"$"+v.toFixed(1)+"B",fmtAxis:v=>v});
+
+  // Revenue chart: actual bars + scenario lines
+  (function(){
+    const s=document.getElementById("c-rev"); const W=680,H=320,m={l:44,r:52,t:20,b:34}; const iw=W-m.l-m.r, ih=H-m.t-m.b;
+    const yrs=["2023","2024","2025","2026E","2027E","2028E","2029E","2030E","2031E"]; const max=15;
+    const X=i=>m.l+iw*(i+.5)/yrs.length, Y=v=>m.t+ih-ih*v/max;
+    for(let v=0;v<=max;v+=5){ el("line",{x1:m.l,x2:W-m.r,y1:Y(v),y2:Y(v),stroke:C.line},s); el("text",{x:m.l-8,y:Y(v)+4,"text-anchor":"end"},s,v); }
+    yrs.forEach((y,i)=>el("text",{x:X(i),y:H-12,"text-anchor":"middle"},s,y));
+    [[0,.079],[1,.290],[2,.510]].forEach(([i,v])=>{ el("rect",{x:X(i)-14,y:Y(v),width:28,height:ih-(Y(v)-m.t),rx:2,fill:C.navy},s); el("text",{x:X(i),y:Y(v)-6,"text-anchor":"middle",class:"lbl"},s,"$"+Math.round(v*1000)+"M"); });
+    const lines={good:[.51,.885,3.3,6.8,9.5,12,14],accent:[.51,.885,2.9,4.6,6,7.3,8.5],bad:[.51,.885,1.8,2.8,3.6,4.3,5]};
+    for (const k in lines){ const pts=lines[k].map((v,j)=>[X(j+2),Y(v)]);
+      el("polyline",{points:pts.map(p=>p.join(",")).join(" "),fill:"none",stroke:C[k],"stroke-width":k==="accent"?3:2},s);
+      pts.forEach(p=>el("circle",{cx:p[0],cy:p[1],r:k==="accent"?4:3,fill:C[k]},s));
+      const last=lines[k][6]; el("text",{x:X(8)+8,y:Y(last)+4,class:"lbl"},s,"$"+last+"B"); }
+  })();
+
+  // Donut
+  (function(){
+    const s=document.getElementById("c-donut"); const cx=160,cy=100,R=82,r=50; let a=-Math.PI/2;
+    [[62,C.navy,"62%"],[24,C.accent,"24%"],[14,C.gray,"14%"]].forEach(([p,c,t])=>{
+      const b=a+2*Math.PI*p/100, large=p>50?1:0;
+      const P=(ang,rad)=>[cx+rad*Math.cos(ang),cy+rad*Math.sin(ang)];
+      const [x1,y1]=P(a,R),[x2,y2]=P(b,R),[x3,y3]=P(b,r),[x4,y4]=P(a,r);
+      el("path",{d:`M${x1} ${y1} A${R} ${R} 0 ${large} 1 ${x2} ${y2} L${x3} ${y3} A${r} ${r} 0 ${large} 0 ${x4} ${y4}Z`,fill:c,stroke:C.surface,"stroke-width":2},s);
+      const mid=(a+b)/2, [lx,ly]=P(mid,(R+r)/2); el("text",{x:lx,y:ly+4,"text-anchor":"middle",fill:C.surface,"font-weight":600},s,t).style.fill="var(--surface)";
+      a=b; });
+    el("text",{x:cx,y:cy+5,"text-anchor":"middle",class:"lbl","font-weight":600},s,"UAE 86%");
+  })();
+
+  function hbars(id, rows, series, max){
+    const s=document.getElementById(id); const [W,H]=s.getAttribute("viewBox").split(" ").slice(2).map(Number);
+    const m={l:150,r:40,t:10,b:24}; const iw=W-m.l-m.r, ih=H-m.t-m.b; const rh=ih/rows.length; const X=v=>m.l+iw*v/max;
+    for(let v=0;v<=max;v++){ el("line",{x1:X(v),x2:X(v),y1:m.t,y2:H-m.b,stroke:C.line},s); el("text",{x:X(v),y:H-6,"text-anchor":"middle"},s,v); }
+    const bh = rh*.7/series.length;
+    rows.forEach((row,i)=>{ const y0=m.t+i*rh+rh*.15;
+      el("text",{x:m.l-10,y:y0+rh*.35+4,"text-anchor":"end",class:"lbl"},s,row.l);
+      series.forEach((sr,j)=>{ const v=row.v[j], y=y0+j*bh, c=typeof sr.c==="function"?sr.c(v):sr.c;
+        el("rect",{x:m.l,y,width:Math.max(X(v)-m.l,2),height:bh-2,rx:2,fill:c},s);
+        el("text",{x:X(v)+6,y:y+bh/2+3},s,v.toFixed(sr.dec ?? 1)); }); });
+  }
+  hbars("c-moat",[
+    {l:"특허·노하우",v:[2.5,4.5]},{l:"전환비용",v:[1.0,4.5]},{l:"네트워크 효과",v:[0,4.0]},{l:"원가 우위",v:[0.5,3.5]},{l:"효율적 규모",v:[1.0,3.0]},{l:"가격 결정력",v:[1.0,4.5]}],
+    [{c:C.accent},{c:C.gray}],5);
+  hbars("c-check",[
+    {l:"이해 가능한 사업",v:[2]},{l:"지속 가능한 해자",v:[1]},{l:"일관된 이익",v:[0]},{l:"높은 ROE·낮은 부채",v:[1]},{l:"낮은 설비투자",v:[0]},{l:"가격 결정력",v:[1]},{l:"정직·유능한 경영진",v:[3]},{l:"안전마진",v:[1]}],
+    [{c:v=>v>=3?C.warn:C.bad,dec:0}],5);
+})();
+</script>
